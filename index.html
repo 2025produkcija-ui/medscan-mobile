@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>MEDSCAN Mobile v2</title>
+  <meta name="theme-color" content="#08111f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <style>
+    :root{--bg:#050b14;--bg2:#08111f;--card:rgba(15,23,42,.86);--card2:rgba(15,23,42,.65);--line:rgba(148,163,184,.18);--text:#eef4ff;--muted:#9db0cb;--blue:#38bdf8;--blue2:#3b82f6;--green:#22c55e;--yellow:#facc15;--orange:#fb923c;--red:#ef4444;--purple:#8b5cf6;--shadow:0 18px 60px rgba(0,0,0,.28);--safe-bottom:max(18px, env(safe-area-inset-bottom))}
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{margin:0;color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at top left, rgba(59,130,246,.16), transparent 30%),radial-gradient(circle at top right, rgba(139,92,246,.12), transparent 26%),linear-gradient(180deg,var(--bg2),var(--bg));min-height:100vh}
+    .app{max-width:520px;margin:0 auto;padding:14px 14px calc(96px + var(--safe-bottom))}
+    .topbar{position:sticky;top:0;z-index:20;padding:10px 0 12px;backdrop-filter: blur(12px);background:linear-gradient(180deg, rgba(5,11,20,.95), rgba(5,11,20,.72), transparent)}
+    .brand{display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid var(--line);border-radius:24px;background:rgba(15,23,42,.74);box-shadow:var(--shadow)}
+    .logo{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue2),var(--purple));font-size:28px;box-shadow:0 10px 24px rgba(59,130,246,.3);flex:0 0 auto}
+    h1{margin:0;font-size:28px;line-height:.98;letter-spacing:-.04em}.subtitle{margin-top:5px;color:var(--muted);font-size:13px}
+    .section{display:none}.section.active{display:block}
+    .card{border:1px solid var(--line);background:linear-gradient(180deg,var(--card),var(--card2));border-radius:24px;padding:16px;box-shadow:var(--shadow);backdrop-filter:blur(14px);margin-top:14px}
+    .hero{padding:18px;border-radius:28px;background:radial-gradient(circle at top right, rgba(255,255,255,.11), transparent 32%),linear-gradient(135deg, #132547, #182c57 42%, #3b2a86)}
+    .hero h2{margin:0;font-size:15px;color:#dbeafe;text-transform:uppercase;letter-spacing:.12em}.hero .big{margin-top:8px;font-size:34px;font-weight:900;line-height:.95;letter-spacing:-.05em}
+    .small{font-size:13px;color:var(--muted);line-height:1.45}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:999px;font-weight:900;border:1px solid var(--line);background:rgba(255,255,255,.06);margin-top:10px}
+    .badge.clean{border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.12);color:#86efac}.badge.mid{border-color:rgba(250,204,21,.4);background:rgba(250,204,21,.12);color:#fde047}.badge.risk{border-color:rgba(239,68,68,.4);background:rgba(239,68,68,.12);color:#fecaca}
+    .progress-block{margin-top:14px}.progress-label{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--muted);margin-bottom:6px}
+    .bar{height:12px;border-radius:999px;overflow:hidden;background:rgba(255,255,255,.08);border:1px solid var(--line)}.fill{height:100%;width:0%;border-radius:999px;transition:width .25s ease}.fill.day{background:linear-gradient(90deg,var(--blue),var(--purple))}.fill.system{background:linear-gradient(90deg,var(--yellow),var(--orange))}
+    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .stat{border:1px solid var(--line);border-radius:18px;padding:14px;background:rgba(2,6,23,.28)} .stat strong{display:block;font-size:26px;margin-top:8px;letter-spacing:-.04em}
+    .score{width:86px;height:86px;border-radius:50%;background:conic-gradient(var(--blue) var(--score,0%), rgba(255,255,255,.1) 0);display:grid;place-items:center;position:relative}.score::before{content:"";position:absolute;inset:8px;border-radius:50%;background:#07101f}.score span{position:relative;font-weight:900;font-size:20px}
+    h2{margin:0 0 10px;font-size:21px;letter-spacing:-.03em}
+    .quote{font-size:22px;font-weight:900;line-height:1.25}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border-radius:999px;background:rgba(255,255,255,.06);color:var(--muted);font-size:12px;border:1px solid var(--line)}
+    .list{display:grid;gap:10px;margin-top:12px}
+    .item{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;border:1px solid var(--line);border-radius:18px;padding:12px 14px;background:rgba(255,255,255,.04)} .item.done{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)} .item.warn{border-color:rgba(250,204,21,.35);background:rgba(250,204,21,.08)} .item.risk{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.1)} .item .icon{font-size:22px}
+    button{appearance:none;border:0;cursor:pointer;font-weight:900;border-radius:16px;padding:12px 14px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#03111f}
+    button.ghost{background:rgba(255,255,255,.06);color:var(--text);border:1px solid var(--line)} button.success{background:linear-gradient(135deg,#22c55e,#4ade80);color:#04220f} button.warning{background:linear-gradient(135deg,#facc15,#fb923c);color:#2b1500} button.danger{background:linear-gradient(135deg,#ef4444,#f97316);color:white}
+    .btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .field{display:grid;gap:6px;margin-top:10px}.field label{font-size:13px;color:var(--muted)}
+    input,textarea,select{width:100%;border:1px solid var(--line);background:rgba(2,6,23,.52);color:var(--text);border-radius:16px;padding:14px 14px;font-size:16px;outline:none} textarea{min-height:96px;resize:vertical}
+    .seg,.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .canvas-wrap{padding:10px;border:1px solid var(--line);border-radius:18px;background:rgba(2,6,23,.28);margin-top:10px} canvas{width:100%;height:auto;border-radius:14px;display:block}
+    table{width:100%;border-collapse:collapse;margin-top:12px} th,td{padding:9px 8px;border-bottom:1px solid var(--line);font-size:13px;text-align:left} th{color:var(--text);background:rgba(255,255,255,.05)} td{color:var(--muted)}
+    .danger-zone{border:1px solid rgba(239,68,68,.28);background:linear-gradient(180deg, rgba(127,29,29,.18), rgba(15,23,42,.62))}
+    .loser{display:grid;gap:10px;margin-top:12px}.loser-item{border:1px solid rgba(251,146,60,.28);background:rgba(251,146,60,.08);border-radius:16px;padding:12px}
+    .sticky-nav{position:fixed;left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));max-width:520px;margin:auto;border:1px solid var(--line);background:rgba(2,6,23,.88);backdrop-filter:blur(18px);display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:8px;border-radius:22px;z-index:30}
+    .nav-btn{background:transparent;border:0;color:var(--muted);padding:10px 4px;border-radius:16px;font-weight:800;font-size:11px}.nav-btn.active{background:rgba(255,255,255,.08);color:#fff}
+    
+    .install-card{border:1px solid rgba(56,189,248,.28);background:linear-gradient(135deg, rgba(56,189,248,.12), rgba(139,92,246,.12))}
+    .install-status{margin-top:10px}
+
+    @media (max-width:420px){.grid2,.seg,.quick-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="topbar"><div class="brand"><div class="logo">🩺</div><div><h1>MEDSCAN Mobile</h1><div class="subtitle">Brz dnevni unos. Fokus na telefonu.</div></div></div></div>
+
+  <section id="screen-home" class="section active">
+    <div class="card hero">
+      <h2>Danas</h2><div class="big" id="todayText">—</div><div class="small" id="timeText">—</div><div id="statusBadge" class="badge mid">🟡 DAN U TOKU</div>
+      <div class="progress-block"><div class="progress-label"><span>Proteklo dana</span><span id="dayPctText">0%</span></div><div class="bar"><div id="dayProgress" class="fill day"></div></div></div>
+      <div class="progress-block"><div class="progress-label"><span>Izvršenje sistema</span><span id="systemPctText">0%</span></div><div class="bar"><div id="systemProgress" class="fill system"></div></div></div>
+    </div>
+    <div class="grid2">
+      <div class="card stat"><span class="small">Koraci</span><strong id="stepsStat">0</strong><span class="small">cilj 10.000</span></div>
+      <div class="card stat"><span class="small">Težina</span><strong id="weightStat">—</strong><span class="small">jutarnji unos</span></div>
+      <div class="card stat"><span class="small">Voda</span><strong id="waterStat">0.0 L</strong><span class="small">cilj 3.0 L</span></div>
+      <div class="card stat" style="display:flex;justify-content:center;align-items:center"><div><div class="score" id="scoreRing"><span id="scoreText">0%</span></div><div class="small" style="text-align:center;margin-top:8px;">dnevni score</div></div></div>
+    </div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h2>⭐ Dnevna poruka</h2><button class="warning" onclick="loadDailyQuote(true)">Nova poruka</button></div><div class="quote" id="dailyQuote">Učitavam...</div><div class="small" id="dailyQuoteAuthor" style="margin-top:8px;">MEDSCAN</div></div>
+    <div class="card"><h2>⚠️ Prioriteti sada</h2><div class="small">Šta trenutno kasni ili treba zatvoriti.</div><div id="priorityList" class="list"></div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><h2>✅ Danas završeno</h2><span class="pill" id="doneCountPill">0 / 10</span></div><div id="doneList" class="list"></div></div>
+  </section>
+
+  <section id="screen-entry" class="section">
+    <div class="card">
+      <h2>⚡ Quick entry</h2><div class="small">Veliki inputi za brz unos sa telefona.</div>
+      <div class="quick-grid">
+        <div class="field"><label>Težina (kg)</label><input id="weight" type="number" step="0.1"></div>
+        <div class="field"><label>Struk (cm)</label><input id="waist" type="number" step="0.1"></div>
+        <div class="field"><label>Koraci</label><input id="steps" type="number"></div>
+        <div class="field"><label>Km</label><input id="km" type="number" step="0.1"></div>
+        <div class="field"><label>Aktivne kcal</label><input id="calories" type="number"></div>
+        <div class="field"><label>Unos kalorija</label><input id="calorieIn" type="number"></div>
+        <div class="field"><label>Proteini (g)</label><input id="protein" type="number"></div>
+        <div class="field"><label>Voda (L)</label><input id="waterLiters" type="number" step="0.1"></div>
+        <div class="field"><label>Glad 1–10</label><input id="hunger" type="number" min="1" max="10"></div>
+        <div class="field"><label>Energija 1–10</label><input id="energy" type="number" min="1" max="10"></div>
+        <div class="field"><label>San (h)</label><input id="sleep" type="number" step="0.5"></div>
+        <div class="field"><label>Večera</label><input id="dinnerTime" type="time"></div>
+        <div class="field"><label>Puls</label><input id="pulse" type="number"></div>
+        <div class="field"><label>Pritisak</label><input id="bp"></div>
+        <div class="field"><label>SpO₂</label><input id="spo2" type="number"></div>
+        <div class="field"><label>Temperatura</label><input id="temp" type="number" step="0.1"></div>
+      </div>
+      <div class="field"><label>Beleška dana</label><textarea id="note"></textarea></div>
+      <div class="btn-row"><button class="success" onclick="saveDay()">Sačuvaj dan</button><button class="ghost" onclick="resetToday()">Reset dana</button></div>
+    </div>
+    <div class="card"><h2>📋 Brze obaveze</h2><div class="small">Tap za zatvaranje današnjeg sistema.</div><div id="taskChecklist" class="list"></div></div>
+    <div class="card"><h2>🏋️ Trening</h2><div class="quick-grid"><div class="field"><label>Visenje (sek)</label><input id="hang" type="number"></div><div class="field"><label>Zgib uz pomoć</label><input id="pull" type="number"></div><div class="field"><label>Kolena</label><input id="knee" type="number"></div><div class="field"><label>Propadanje / držanje</label><input id="dip" type="number"></div></div><div class="field"><label>Napomena za telo / ruku</label><textarea id="armNote"></textarea></div></div>
+  </section>
+
+  <section id="screen-history" class="section">
+    <div class="card"><h2>📈 Istorija</h2><div class="grid2"><div class="stat"><span class="small">Trenutni streak</span><strong id="streakNow">0</strong></div><div class="stat"><span class="small">Najbolji streak</span><strong id="streakBest">0</strong></div><div class="stat"><span class="small">Promena težine</span><strong id="weightDelta">—</strong></div><div class="stat"><span class="small">Rekord koraka</span><strong id="recSteps">0</strong></div></div></div>
+    <div class="card"><h2>⚖️ Graf težine</h2><div class="canvas-wrap"><canvas id="weightChart" width="420" height="220"></canvas></div></div>
+    <div class="card"><h2>📏 Graf struka</h2><div class="canvas-wrap"><canvas id="waistChart" width="420" height="220"></canvas></div></div>
+    <div class="card"><h2>📚 Poslednji dani</h2><div id="historyTable"></div></div>
+  </section>
+
+  <section id="screen-logs" class="section">
+    <div class="card"><h2>🧭 Terenski dnevnik</h2><div class="field"><label>Tip</label><select id="fieldEventType"><option value="info">Info / napomena</option><option value="water">Voda</option><option value="beer">Pivo</option><option value="soda">Gazirano / sok</option><option value="food">Hrana van plana</option><option value="walk">Šetnja / koraci</option><option value="symptom">Simptom / osećaj</option></select></div><div class="field"><label>Kratak unos</label><input id="fieldEventText"></div><div class="btn-row"><button class="warning" onclick="addFieldEvent()">Dodaj sa vremenom</button><button class="ghost" onclick="clearFieldEvents()">Očisti današnji log</button></div><div id="fieldLogTable"></div></div>
+    <div class="card danger-zone"><div class="small">🚀 Početak transformacije</div><div style="font-size:28px;font-weight:900;margin-top:4px;">13.05.2026.</div><div class="small" style="margin-top:6px;">Dani upozorenja nisu za krivicu nego za opomenu.</div><div class="seg" style="margin-top:12px;"><div class="field" style="margin-top:0"><label>Datum</label><input id="loserDate" type="date"></div><div class="field" style="margin-top:0"><label>Razlog</label><input id="loserReason"></div></div><div class="btn-row"><button class="danger" onclick="addLoserDay()">Dodaj loser day</button></div><div id="loserDaysList" class="loser"></div></div>
+    <div class="card"><h2>🏆 Rekordi</h2><div id="recordList" class="list"></div></div>
+  </section>
+
+  <section id="screen-more" class="section">
+    <div class="card"><h2>📤 Izveštaj i backup</h2><div class="btn-row"><button onclick="sendEmail()">Pošalji email</button><button class="ghost" onclick="exportJSON()">Izvezi JSON</button></div><div class="small" style="margin-top:10px;">EmailJS radi ako su ključevi podešeni. U suprotnom otvara mail app.</div></div>
+    <div class="card"><h2>📅 Plan za sutra</h2><div class="seg"><div class="field" style="margin-top:0"><label>Kada šetnja?</label><input id="tomorrowWalk" type="time"></div><div class="field" style="margin-top:0"><label>Kada trening?</label><input id="tomorrowWorkout" type="time"></div></div><div class="field"><label>Fokus sutra</label><textarea id="tomorrowFocus"></textarea></div></div>
+    <div class="card"><h2>🏆 Achievement sistem</h2><div id="achievementList" class="list"></div></div>
+    <div class="card install-card"><h2>📲 App instalacija</h2><div class="small">Ako otvoriš ovu verziju sa hostinga koji podržava PWA fajlove, možeš je dodati na početni ekran kao aplikaciju. Na Androidu će raditi kao installable web app, a kasnije može i Play Store paket.</div><div class="btn-row"><button id="installAppBtn" class="success" disabled>Instaliraj aplikaciju</button><button id="checkOfflineBtn" class="ghost">Proveri offline spremnost</button></div><div id="installStatus" class="pill install-status">PWA status: proveravam…</div></div>
+  </section>
+</div>
+
+<nav class="sticky-nav">
+  <button class="nav-btn active" data-screen="home">Danas</button>
+  <button class="nav-btn" data-screen="entry">Unos</button>
+  <button class="nav-btn" data-screen="history">Istorija</button>
+  <button class="nav-btn" data-screen="logs">Log</button>
+  <button class="nav-btn" data-screen="more">Više</button>
+</nav>
+
+<script>
+const EMAILJS_CONFIG={publicKey:'nsqG-_xjWMfl5fk6Y',serviceId:'service_oofn0gf',templateId:'template_dxt6uwg',toEmail:'2025produkcija@gmail.com'};
+const TASKS=[{id:'warmLemonWater',text:'500 ml vode po buđenju',time:7,icon:'💧'},{id:'waterTea',text:'Jutarnji čaj bez šećera',time:10,icon:'🍵'},{id:'smoothie',text:'Smoothie zatvoren',time:12,icon:'🥤'},{id:'mainMeal',text:'Glavni obrok zatvoren',time:18,icon:'🍽️'},{id:'walk',text:'Šetnja / koraci',time:19,icon:'🚶'},{id:'bars',text:'Sprava 10–15 min',time:20,icon:'🏋️'},{id:'noBread',text:'Bez hleba',time:21,icon:'🥖'},{id:'noSugar',text:'Bez šećera / sokova',time:21,icon:'🍭'},{id:'noLateFood',text:'Bez kasnog jela',time:22,icon:'🌙'},{id:'waterGoal',text:'Voda 3.0L',time:21,icon:'🫗'}];
+const RISKS=[{id:'beer',text:'Pivo'},{id:'bread',text:'Hleb / pecivo'},{id:'sweet',text:'Slatko / sok'},{id:'lateFood',text:'Kasno jelo'},{id:'missedWalk',text:'Preskočena šetnja'}];
+const LOCAL_QUOTES=['Mali koraci svaki dan. Velike promene zauvek.','Ne mora savršeno. Mora zatvoreno.','Danas ne juriš motivaciju — gradiš sistem.','Telo pamti disciplinu čak i kad vaga ćuti.','Jedan čist dan je cigla u novom životu.','Kad ti je teško, uradi minimum. Minimum čuva ritam.','Ne pobeđuje najjači dan, nego najdosledniji čovek.','Svaki zapis je dokaz da vodiš svoj proces.','Disciplina danas znači lakše telo sutra.','Zatvoren dan je pobeda čak i kad nije savršen.','Nije poenta brzina. Poenta je smer.','Ne odustaj zbog jednog lošeg dana.','Sistem je jači od motivacije.','San, voda i hodanje menjaju više nego ekstremi.','Doslednost pravi transformaciju.'];
+const TRANSFORMATION_START='2026-05-13', recordsKey='medscan-records-v2', loserKey='medscan-loser-days-v2';
+const key=()=> 'medscan-day-v2-' + new Date().toISOString().slice(0,10);
+const defaultState=()=>({tasks:{},risks:{},fields:{},fieldEvents:[]});
+function loadState(){try{return JSON.parse(localStorage.getItem(key())||JSON.stringify(defaultState()));}catch(e){return defaultState();}}
+function saveState(s){localStorage.setItem(key(),JSON.stringify(s));}
+function loadRecords(){try{return JSON.parse(localStorage.getItem(recordsKey)||'{"hang":0,"pull":0,"knee":0,"dip":0,"steps":0}');}catch(e){return {hang:0,pull:0,knee:0,dip:0,steps:0};}}
+function saveRecords(r){localStorage.setItem(recordsKey,JSON.stringify(r));}
+function loadLoserDays(){try{return JSON.parse(localStorage.getItem(loserKey)||'[]');}catch(e){return [];}}
+function saveLoserDays(items){localStorage.setItem(loserKey,JSON.stringify(items));}
+function setText(id,v){const el=document.getElementById(id); if(el) el.textContent=v;}
+function setWidth(id,pct){const el=document.getElementById(id); if(el) el.style.width=pct+'%';}
+function bindNav(){document.querySelectorAll('.nav-btn').forEach(btn=>btn.addEventListener('click',()=>{const s=btn.dataset.screen;document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b===btn));document.querySelectorAll('.section').forEach(sec=>sec.classList.remove('active'));const t=document.getElementById('screen-'+s); if(t) t.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}));}
+function bindFields(){const ids=['weight','waist','steps','km','calories','calorieIn','protein','waterLiters','hunger','energy','sleep','dinnerTime','pulse','bp','spo2','temp','note','hang','pull','knee','dip','armNote','tomorrowWalk','tomorrowWorkout','tomorrowFocus']; const state=loadState(); ids.forEach(id=>{const el=document.getElementById(id); if(!el) return; el.value=state.fields[id]||''; el.addEventListener('input',()=>{const s=loadState(); s.fields[id]=el.value; if(id==='waterLiters') s.tasks.waterGoal=Number(el.value||0)>=3; saveState(s); refresh();});});}
+function completionPercent(state){const done=TASKS.filter(t=>state.tasks[t.id]).length; return Math.round((done/TASKS.length)*100);}
+function riskCount(state){return RISKS.filter(r=>state.risks[r.id]).length;}
+function dayProgressPercent(){const now=new Date(), start=new Date(now), end=new Date(now); start.setHours(6,0,0,0); end.setHours(23,0,0,0); if(now<=start) return 0; if(now>=end) return 100; return Math.round(((now-start)/(end-start))*100);}
+function statusMeta(state){const pct=completionPercent(state), risks=riskCount(state), h=new Date().getHours(), critical=state.tasks.mainMeal&&state.tasks.walk&&state.tasks.noLateFood; if(risks>0 || (h>=20 && !critical)) return {cls:'risk',text:'🔴 RIZIČAN DAN'}; if(pct>=90) return {cls:'clean',text:'🟢 ČIST DAN'}; return {cls:'mid',text:'🟡 DAN U TOKU'};}
+function renderHeader(){setText('todayText', new Date().toLocaleDateString('sr-RS',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'})); setText('timeText', new Date().toLocaleTimeString('sr-RS',{hour:'2-digit',minute:'2-digit'}));}
+function loadDailyQuote(force=false){const quoteBox=document.getElementById('dailyQuote'), authorBox=document.getElementById('dailyQuoteAuthor'); if(!quoteBox||!authorBox) return; const today=new Date(), dateKey=today.toISOString().slice(0,10), baseIndex=(today.getFullYear()*10000+(today.getMonth()+1)*100+today.getDate())%LOCAL_QUOTES.length, cursorKey='medscan-quote-cursor-v2-'+dateKey; let index=Number(localStorage.getItem(cursorKey)); if(Number.isNaN(index)) index=baseIndex; if(force) index=(index+1)%LOCAL_QUOTES.length; localStorage.setItem(cursorKey,String(index)); quoteBox.textContent='“'+LOCAL_QUOTES[index]+'”'; authorBox.textContent='MEDSCAN dnevna poruka';}
+function renderHome(){const state=loadState(), dayPct=dayProgressPercent(), sysPct=completionPercent(state), meta=statusMeta(state), badge=document.getElementById('statusBadge'); if(badge){badge.className='badge '+meta.cls; badge.textContent=meta.text;} setText('dayPctText', dayPct+'%'); setWidth('dayProgress',dayPct); setText('systemPctText', sysPct+'%'); setWidth('systemProgress',sysPct); setText('scoreText',sysPct+'%'); const ring=document.getElementById('scoreRing'); if(ring) ring.style.setProperty('--score',sysPct+'%'); const f=state.fields||{}; setText('stepsStat',Number(f.steps||0).toLocaleString('sr-RS')); setText('weightStat',f.weight?(f.weight+' kg'):'—'); setText('waterStat',(f.waterLiters||'0.0')+' L'); renderPriorities(); renderDoneList();}
+function toggleTask(id){const s=loadState(); s.tasks[id]=!s.tasks[id]; saveState(s); refresh();}
+function renderTaskChecklist(){const box=document.getElementById('taskChecklist'); if(!box) return; const state=loadState(); box.innerHTML=TASKS.map(t=>`<div class="item ${state.tasks[t.id]?'done':'warn'}"><div class="icon">${t.icon}</div><div><strong>${t.text}</strong><div class="small">rok oko ${String(t.time).padStart(2,'0')}:00</div></div><button class="${state.tasks[t.id]?'ghost':''}" onclick="toggleTask('${t.id}')">${state.tasks[t.id]?'Poništi':'Zatvori'}</button></div>`).join('');}
+function renderPriorities(){const state=loadState(), box=document.getElementById('priorityList'); if(!box) return; const f=state.fields||{}, hour=new Date().getHours(), items=[]; TASKS.forEach(t=>{if(!state.tasks[t.id]&&hour>=t.time) items.push({icon:t.icon,title:t.text,note:'Kasni za današnji ritam',action:t.id});}); if(Number(f.steps||0)<6000&&hour>=18) items.push({icon:'👟',title:'Koraci su niski',note:'Pojačaj šetnju večeras',action:'walk'}); if(Number(f.waterLiters||0)<2&&hour>=16) items.push({icon:'💧',title:'Voda je niska',note:'Dodaj još vode danas',action:'waterGoal'}); if(!items.length){box.innerHTML='<div class="item done"><div class="icon">✅</div><div><strong>Trenutno nema kritičnih kašnjenja.</strong><div class="small">Nastavi ritam i zatvori dan.</div></div><span class="pill">mirno</span></div>'; return;} box.innerHTML=items.slice(0,6).map(i=>`<div class="item risk"><div class="icon">${i.icon}</div><div><strong>${i.title}</strong><div class="small">${i.note}</div></div><button class="danger" onclick="toggleTask('${i.action}')">Zatvori</button></div>`).join('');}
+function renderDoneList(){const box=document.getElementById('doneList'), pill=document.getElementById('doneCountPill'); if(!box) return; const state=loadState(), done=TASKS.filter(t=>state.tasks[t.id]); if(pill) pill.textContent=done.length+' / '+TASKS.length; box.innerHTML=done.length?done.map(t=>`<div class="item done"><div class="icon">${t.icon}</div><div><strong>${t.text}</strong><div class="small">zatvoreno</div></div><span class="pill">ok</span></div>`).join(''):'<div class="small">Još nema zatvorenih stavki danas.</div>';}
+function updateRecords(showPopup=false){const s=loadState(), rec=loadRecords(), vals={hang:Number(s.fields.hang||0),pull:Number(s.fields.pull||0),knee:Number(s.fields.knee||0),dip:Number(s.fields.dip||0),steps:Number(s.fields.steps||0)}; let changed=false; Object.keys(vals).forEach(k=>{if(vals[k]>rec[k]){rec[k]=vals[k];changed=true;}}); saveRecords(rec); renderRecords(); if(changed&&showPopup) alert('Novi rekord je sačuvan.');}
+function renderRecords(){const rec=loadRecords(); setText('recSteps', rec.steps||0); const box=document.getElementById('recordList'); if(!box) return; box.innerHTML=[['Visenje',rec.hang+' sek'],['Zgib uz pomoć',rec.pull],['Podizanje kolena',rec.knee],['Propadanje / držanje',rec.dip+' sek'],['Koraci',rec.steps]].map(([a,b])=>`<div class="item done"><div class="icon">🏆</div><div><strong>${a}</strong><div class="small">lični rekord</div></div><span class="pill">${b}</span></div>`).join('');}
+function eventLabel(type){const map={info:'ℹ️ Info',water:'💧 Voda',beer:'🍺 Pivo',soda:'🥤 Sok',food:'🍽️ Hrana',walk:'🚶 Šetnja',symptom:'🩺 Simptom'}; return map[type]||'ℹ️ Info';}
+function addFieldEvent(){const typeEl=document.getElementById('fieldEventType'), textEl=document.getElementById('fieldEventText'); if(!typeEl||!textEl) return; const text=textEl.value.trim(); if(!text){alert('Upiši kratak unos.'); return;} const s=loadState(); s.fieldEvents=s.fieldEvents||[]; const now=new Date(); s.fieldEvents.push({time:now.toLocaleTimeString('sr-RS',{hour:'2-digit',minute:'2-digit'}),type:typeEl.value,text}); if(typeEl.value==='beer') s.risks.beer=true; if(typeEl.value==='soda') s.risks.sweet=true; if(typeEl.value==='food') s.risks.bread=true; saveState(s); textEl.value=''; refresh();}
+function clearFieldEvents(){if(!confirm('Obrisati samo današnji terenski log?')) return; const s=loadState(); s.fieldEvents=[]; saveState(s); refresh();}
+function renderFieldEvents(){const box=document.getElementById('fieldLogTable'); if(!box) return; const events=loadState().fieldEvents||[]; if(!events.length){box.innerHTML='<div class="small" style="margin-top:12px;">Još nema terenskih zapisa danas.</div>'; return;} box.innerHTML=`<table><thead><tr><th>Vreme</th><th>Tip</th><th>Opis</th></tr></thead><tbody>${events.slice().reverse().map(e=>`<tr><td>${e.time}</td><td>${eventLabel(e.type)}</td><td>${e.text}</td></tr>`).join('')}</tbody></table>`;}
+function addLoserDay(){const dateEl=document.getElementById('loserDate'), reasonEl=document.getElementById('loserReason'); if(!dateEl||!reasonEl) return; const date=dateEl.value, reason=reasonEl.value.trim(); if(!date||!reason){alert('Upiši datum i razlog.'); return;} const items=loadLoserDays(); items.unshift({id:Date.now(),date,reason}); saveLoserDays(items); dateEl.value=''; reasonEl.value=''; renderLoserDays();}
+function removeLoserDay(id){saveLoserDays(loadLoserDays().filter(x=>x.id!==id)); renderLoserDays();}
+function renderLoserDays(){const box=document.getElementById('loserDaysList'); if(!box) return; const items=loadLoserDays(); box.innerHTML=items.length?items.map(i=>`<div class="loser-item"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><strong>${i.date}</strong><button class="danger" onclick="removeLoserDay(${i.id})">Obriši</button></div><div class="small" style="margin-top:8px;color:#fed7aa">${i.reason}</div></div>`).join(''):'<div class="small" style="margin-top:10px;">Još nema upisanih loser days.</div>';}
+function dayKeys(days=30){const keys=[], today=new Date(), start=new Date(TRANSFORMATION_START+'T00:00:00'), first=new Date(today); first.setDate(today.getDate()-(days-1)); const realStart=first<start?start:first; for(let d=new Date(realStart); d<=today; d.setDate(d.getDate()+1)) keys.push('medscan-day-v2-'+d.toISOString().slice(0,10)); return keys;}
+function isCleanDay(state){if(!state) return false; return completionPercent(state)>=80 && riskCount(state)===0;}
+function historyData(){return dayKeys(30).map(k=>{const date=k.replace('medscan-day-v2-',''); let state=null; try{state=JSON.parse(localStorage.getItem(k)||'null');}catch(e){} const weight=state?.fields?.weight?Number(state.fields.weight):null, waist=state?.fields?.waist?Number(state.fields.waist):null; return {date,state,weight,waist,clean:isCleanDay(state),steps:state?.fields?.steps||''};});}
+function streaks(data){let current=0,best=0,run=0; for(let i=data.length-1;i>=0;i--){if(data[i].clean) current++; else break;} data.forEach(d=>{if(d.clean) run++; else run=0; best=Math.max(best,run);}); return {current,best};}
+function drawChart(canvasId, points, color, labelText){const canvas=document.getElementById(canvasId); if(!canvas) return; const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height); ctx.fillStyle='rgba(255,255,255,.03)'; ctx.fillRect(0,0,canvas.width,canvas.height); for(let y=30;y<canvas.height;y+=40){ctx.strokeStyle='rgba(255,255,255,.08)'; ctx.beginPath(); ctx.moveTo(34,y); ctx.lineTo(canvas.width-10,y); ctx.stroke();} if(points.length<2){ctx.fillStyle='#94a3b8'; ctx.font='15px system-ui'; ctx.fillText(labelText,22,110); return;} const values=points.map(p=>p.value), min=Math.min(...values)-0.5, max=Math.max(...values)+0.5, x=i=>38+(i/Math.max(1,points.length-1))*(canvas.width-58), y=v=>180-((v-min)/Math.max(1,max-min))*130; ctx.strokeStyle=color; ctx.lineWidth=4; ctx.beginPath(); points.forEach((p,i)=>{const px=x(i), py=y(p.value); if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);}); ctx.stroke(); points.forEach((p,i)=>{const px=x(i), py=y(p.value); ctx.fillStyle=p.clean?'#22c55e':color; ctx.beginPath(); ctx.arc(px,py,5,0,Math.PI*2); ctx.fill();});}
+function renderHistory(){const data=historyData(), s=streaks(data); setText('streakNow',s.current+' dana'); setText('streakBest',s.best+' dana'); const weights=data.filter(d=>d.weight!==null); if(weights.length>=2){const delta=(weights[weights.length-1].weight-weights[0].weight).toFixed(1); setText('weightDelta',(delta>0?'+':'')+delta+' kg');} else setText('weightDelta','—'); drawChart('weightChart',weights.map(d=>({value:d.weight,clean:d.clean})),'#38bdf8','Unesi bar 2 težine za graf.'); const waists=data.filter(d=>d.waist!==null); drawChart('waistChart',waists.map(d=>({value:d.waist,clean:d.clean})),'#a78bfa','Unesi bar 2 struka za graf.'); const table=document.getElementById('historyTable'); if(table) table.innerHTML=`<table><thead><tr><th>Datum</th><th>Kg</th><th>Struk</th><th>Koraci</th></tr></thead><tbody>${data.slice(-10).reverse().map(d=>`<tr><td>${d.date}</td><td>${d.weight??'-'}</td><td>${d.waist??'-'}</td><td>${d.steps||'-'}</td></tr>`).join('')}</tbody></table>`; renderAchievements(data);}
+function renderAchievements(data){const box=document.getElementById('achievementList'); if(!box) return; const achievements=[], rec=loadRecords(), latestWeight=[...data].reverse().find(d=>d.weight!==null)?.weight, s=streaks(data); if(latestWeight!==undefined&&latestWeight<=110) achievements.push('🏆 Prvih -5 kg'); if(rec.hang>=30) achievements.push('🏆 30 sekundi visenja'); if(rec.pull>=1) achievements.push('🏆 Prvi zgib uz pomoć'); if(s.current>=7) achievements.push('🏆 7 čistih dana'); box.innerHTML=achievements.length?achievements.map(a=>`<div class="item done"><div class="icon">🔥</div><div><strong>${a}</strong><div class="small">otključano</div></div><span class="pill">da</span></div>`).join(''):'<div class="small">Achievement-i će se pojavljivati automatski.</div>';}
+function reportText(){const state=loadState(), f=state.fields||{}, doneTasks=TASKS.filter(t=>state.tasks[t.id]).map(t=>'✓ '+t.text).join('\n')||'-', fieldEvents=(state.fieldEvents||[]).map(e=>`${e.time} - ${eventLabel(e.type)} - ${e.text}`).join('\n')||'-', status=document.getElementById('statusBadge')?.textContent||'-'; return `MEDSCAN Mobile dnevni izveštaj
+
+Datum: ${new Date().toLocaleDateString('sr-RS')}
+Status: ${status}
+
+Težina: ${f.weight||'-'} kg
+Struk: ${f.waist||'-'} cm
+Koraci: ${f.steps||'-'}
+Km: ${f.km||'-'}
+Aktivne kcal: ${f.calories||'-'}
+Unos kalorija: ${f.calorieIn||'-'}
+Proteini: ${f.protein||'-'}
+Voda: ${f.waterLiters||'-'} L
+Glad: ${f.hunger||'-'}
+Energija: ${f.energy||'-'}
+San: ${f.sleep||'-'} h
+
+Vitalni:
+Puls: ${f.pulse||'-'}
+Pritisak: ${f.bp||'-'}
+SpO2: ${f.spo2||'-'}
+Temperatura: ${f.temp||'-'}
+
+Trening:
+Visenje: ${f.hang||0}
+Zgib uz pomoć: ${f.pull||0}
+Kolena: ${f.knee||0}
+Propadanje/držanje: ${f.dip||0}
+Napomena: ${f.armNote||'-'}
+
+Terenski dnevnik:
+${fieldEvents}
+
+Završeno:
+${doneTasks}
+
+Beleška:
+${f.note||'-'}`;}
+async function sendEmail(){const subjectRaw='MEDSCAN Mobile izveštaj - '+new Date().toLocaleDateString('sr-RS'), bodyRaw=reportText(), emailReady=EMAILJS_CONFIG.publicKey&&EMAILJS_CONFIG.serviceId&&EMAILJS_CONFIG.templateId; if(!emailReady){const subject=encodeURIComponent(subjectRaw), body=encodeURIComponent(bodyRaw); window.location.href=`mailto:?subject=${subject}&body=${body}`; return;} try{emailjs.init({publicKey:EMAILJS_CONFIG.publicKey}); await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, {subject:subjectRaw,message:bodyRaw,to_email:EMAILJS_CONFIG.toEmail||undefined}); alert('Izveštaj je poslat.');}catch(err){console.error(err);const subject=encodeURIComponent(subjectRaw), body=encodeURIComponent(bodyRaw); window.location.href=`mailto:?subject=${subject}&body=${body}`;}}
+function exportJSON(){const payload={today:loadState(),records:loadRecords(),loserDays:loadLoserDays(),generatedAt:new Date().toISOString()}, blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}), url=URL.createObjectURL(blob), a=document.createElement('a'); a.href=url; a.download='medscan-mobile-v2.json'; a.click(); URL.revokeObjectURL(url);}
+function saveDay(){updateRecords(true); refresh(); alert('Dan je sačuvan.');}
+function resetToday(){if(!confirm('Resetovati samo današnji unos?')) return; localStorage.removeItem(key()); location.reload();}
+function refresh(){renderHeader(); renderHome(); renderTaskChecklist(); renderFieldEvents(); renderLoserDays(); updateRecords(false); renderHistory();}
+window.toggleTask=toggleTask; window.addFieldEvent=addFieldEvent; window.clearFieldEvents=clearFieldEvents; window.addLoserDay=addLoserDay; window.removeLoserDay=removeLoserDay; window.loadDailyQuote=loadDailyQuote; window.sendEmail=sendEmail; window.exportJSON=exportJSON; window.saveDay=saveDay; window.resetToday=resetToday;
+bindNav(); bindFields(); loadDailyQuote(false); renderRecords(); refresh(); registerPWA(); setInterval(renderHeader,60000);
+
+let deferredInstallPrompt = null;
+
+function setInstallStatus(message){
+  const el = document.getElementById('installStatus');
+  if (el) el.textContent = message;
+}
+
+async function registerPWA(){
+  const installBtn = document.getElementById('installAppBtn');
+  const offlineBtn = document.getElementById('checkOfflineBtn');
+
+  if ('serviceWorker' in navigator) {
+    try {
+      await navigator.serviceWorker.register('./service-worker.js');
+      setInstallStatus('PWA status: service worker aktivan.');
+    } catch (err) {
+      console.error('SW registration failed', err);
+      setInstallStatus('PWA status: service worker nije registrovan.');
+    }
+  } else {
+    setInstallStatus('PWA status: browser ne podržava service worker.');
+  }
+
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    if (installBtn) installBtn.disabled = false;
+    setInstallStatus('PWA status: aplikacija je spremna za instalaciju.');
+  });
+
+  window.addEventListener('appinstalled', () => {
+    deferredInstallPrompt = null;
+    if (installBtn) installBtn.disabled = true;
+    setInstallStatus('PWA status: aplikacija je instalirana.');
+  });
+
+  if (installBtn) {
+    installBtn.addEventListener('click', async () => {
+      if (!deferredInstallPrompt) {
+        setInstallStatus('PWA status: otvori sa hostovanog URL-a i koristi Add to Home Screen ako se dugme ne aktivira.');
+        return;
+      }
+      deferredInstallPrompt.prompt();
+      const choice = await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      if (installBtn) installBtn.disabled = true;
+      setInstallStatus('PWA status: ' + (choice && choice.outcome === 'accepted' ? 'instalacija prihvaćena.' : 'instalacija otkazana.'));
+    });
+  }
+
+  if (offlineBtn) {
+    offlineBtn.addEventListener('click', async () => {
+      try {
+        const reg = await navigator.serviceWorker.getRegistration();
+        if (reg) {
+          setInstallStatus('PWA status: offline cache spreman kada se fajl posluži preko hostinga.');
+        } else {
+          setInstallStatus('PWA status: nema aktivne offline registracije.');
+        }
+      } catch (err) {
+        setInstallStatus('PWA status: offline provera nije uspela.');
+      }
+    });
+  }
+}
+
+</script>
+</body>
+</html>
