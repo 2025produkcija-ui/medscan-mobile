@@ -68,12 +68,34 @@
     .tab.active{background:rgba(255,255,255,.08);color:var(--text)}
     .install-banner{display:none;margin-bottom:16px;padding:14px;border-radius:20px;border:1px solid rgba(83,184,255,.22);background:rgba(83,184,255,.08)}
     .install-banner.show{display:block}
+  
+    .insight-card{padding:18px;border-radius:22px;border:1px solid var(--line-strong);background:linear-gradient(180deg, rgba(18,30,58,.98), rgba(9,17,34,.92));box-shadow:var(--shadow)}
+    .insight-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+    .insight-chip{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;font-size:12px;font-weight:800;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);color:var(--muted)}
+    .recovery-card{border-color:rgba(83,184,255,.22);background:linear-gradient(180deg, rgba(13,28,52,.98), rgba(8,18,34,.94))}
+    .recovery-score{display:flex;align-items:center;gap:14px;margin-top:6px}
+    .recovery-ring{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--blue) var(--recovery,0%), rgba(255,255,255,.08) 0);position:relative;flex:0 0 auto}
+    .recovery-ring::before{content:"";position:absolute;inset:8px;border-radius:50%;background:#091322}
+    .recovery-ring strong{position:relative;font-size:18px}
+    .recovery-list{display:grid;gap:10px;margin-top:14px}
+    .recovery-item{display:flex;justify-content:space-between;gap:12px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
+    .recovery-item span:last-child{font-weight:800;color:#dff1ff}
+    .damage-card{border-color:rgba(255,155,82,.32);background:linear-gradient(180deg, rgba(50,23,14,.92), rgba(22,16,28,.95))}
+    .damage-card.active{box-shadow:0 18px 50px rgba(255,140,60,.12)}
+    .damage-status{display:inline-flex;align-items:center;gap:10px;padding:10px 14px;border-radius:999px;font-weight:900;font-size:13px;letter-spacing:.02em}
+    .damage-status.active{background:rgba(255,155,82,.16);border:1px solid rgba(255,155,82,.34);color:#ffd6bd}
+    .damage-status.idle{background:rgba(61,220,132,.12);border:1px solid rgba(61,220,132,.28);color:#b8f5d0}
+    .damage-actions{display:grid;gap:10px;margin-top:14px}
+    .damage-action{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:16px;border:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.04)}
+    .damage-action .dot{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.06);flex:0 0 auto}
+    .tone-note{margin-top:12px;padding:12px 14px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);color:#dde9ff}
+
   </style>
 </head>
 <body>
   <div class="app">
     <div class="top-card">
-      <div class="brand"><div class="logo">🩺</div><div><h1>MEDSCAN Mobile</h1><div class="subtitle">Brz dnevni unos. Fokus na telefonu.</div></div></div>
+      <div class="brand"><div class="logo">🩺</div><div><h1>MEDSCAN Mobile</h1><div class="subtitle">Postaješ čovek koji zatvara dan. Brz unos, jasan nastavak.</div></div></div>
       <button class="ghost-btn" onclick="goTab('history')">Istorija</button>
     </div>
     <div id="installBanner" class="install-banner top-card" style="padding:14px 16px;">
@@ -83,7 +105,7 @@
 
     <section id="tab-today" class="section active">
       <div class="card hero">
-        <div class="eyebrow">Danas</div><h2 id="todayLabel">—</h2><div class="time-row"><span id="nowTime">--:--</span><span class="small">Fokus: zatvori najbitnije, ne savršenstvo.</span></div>
+        <div class="eyebrow">Danas</div><h2 id="todayLabel">—</h2><div class="time-row"><span id="nowTime">--:--</span><span class="small">Fokus: zatvori dan i vrati ritam, ne savršenstvo.</span></div>
         <div id="statusPill" class="pill">🟡 DAN U TOKU</div>
         <div class="ring-row">
           <div class="progress-stack">
@@ -103,6 +125,31 @@
       <div class="card input-card">
         <h3 class="section-title" style="margin-bottom:4px;">Prioriteti danas</h3><div class="section-sub">Najbitnije stavke su gore. Zatvaraj jednu po jednu.</div>
         <div id="priorityList" class="priority-list"></div>
+      </div>
+
+      <div class="insight-card recovery-card">
+        <div class="insight-head">
+          <div><div class="eyebrow" style="margin-bottom:6px;">Recovery</div><h3 class="section-title" style="font-size:24px;margin-bottom:4px;">Recovery score</h3><div class="section-sub">Oporavak danas: san, voda, koraci, energija i glad.</div></div>
+          <div class="insight-chip">bez srama • samo signal</div>
+        </div>
+        <div class="recovery-score">
+          <div class="recovery-ring" id="recoveryRing"><strong id="recoveryScoreText">0%</strong></div>
+          <div>
+            <div id="recoveryHeadline" style="font-size:20px;font-weight:900;letter-spacing:-.03em;">Ritam se gradi.</div>
+            <div id="recoverySubtext" class="small" style="margin-top:6px;">Telo danas traži miran, stabilan nastavak.</div>
+          </div>
+        </div>
+        <div id="recoveryList" class="recovery-list"></div>
+      </div>
+
+      <div id="damageCard" class="insight-card damage-card">
+        <div class="insight-head">
+          <div><div class="eyebrow" style="margin-bottom:6px;color:#ffbe95;">Recovery mode</div><h3 class="section-title" style="font-size:24px;margin-bottom:4px;">Damage control mode</h3><div class="section-sub">Kada dođe odstupanje, app vodi korekciju — ne kaznu.</div></div>
+          <div id="damageStatus" class="damage-status idle">🟢 Stabilan ritam</div>
+        </div>
+        <div id="damageReason" class="small">Za sada nema potrebe za damage control planom.</div>
+        <div id="damageActions" class="damage-actions"></div>
+        <div class="tone-note">Ovde nema “failed” i nema krivice. Samo sledeći potez koji vraća ritam.</div>
       </div>
 
       <div class="card input-card">
@@ -155,7 +202,7 @@
         <div id="fieldLogBox" class="log-list" style="margin-top:14px;"></div>
       </div>
       <div class="card input-card">
-        <h3 class="section-title">⚠️ Loser days</h3><div class="section-sub">Ne za krivicu. Samo za opomenu i pregled ritma.</div>
+        <h3 class="section-title">⚠️ Loser days</h3><div class="section-sub">Ne za krivicu. Samo za opomenu, korekciju i pregled ritma.</div>
         <div class="grid-2"><div class="field"><label>Datum</label><input id="loserDate" type="date"></div><div class="field"><label>Razlog</label><input id="loserReason" placeholder="Npr. pivo, lenjost, preskočena šetnja"></div></div>
         <div class="toolbar"><button class="danger-btn" onclick="addLoserDay()">Dodaj loser day</button></div>
         <div id="loserDaysBox" class="log-list" style="margin-top:14px;"></div>
@@ -167,7 +214,7 @@
         <h3 class="section-title">Više</h3>
         <div class="field"><label>Kratka beleška</label><textarea id="note" placeholder="Kako je prošao dan, šta popravljaš sutra..."></textarea></div>
         <div class="field" style="margin-top:12px;"><label>Sutrašnji fokus</label><textarea id="tomorrowFocus" placeholder="Npr. bez piva, ranija šetnja, više vode..."></textarea></div>
-        <div class="toolbar"><button id="installBtnMore" class="primary-btn">Instaliraj app</button><button class="ghost-btn" onclick="sendEmail()">Pošalji izveštaj</button><button class="ghost-btn" onclick="exportJSON()">Izvezi JSON</button><button class="warn-btn" onclick="resetToday()">Resetuj danas</button></div>
+        <div class="toolbar"><button id="installBtnMore" class="primary-btn">Instaliraj app</button><button class="ghost-btn" onclick="sendEmail()">Pošalji rezime</button><button class="ghost-btn" onclick="exportJSON()">Izvezi JSON</button><button class="warn-btn" onclick="resetToday()">Resetuj danas</button></div>
       </div>
       <div class="card input-card"><h3 class="section-title" style="font-size:22px;">PWA status</h3><div id="pwaStatus" class="small">Proveravam instalaciju...</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;"><span style="display:inline-flex;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.05);color:var(--muted);font-size:12px;" id="storageInfo">localStorage aktivan</span><span style="display:inline-flex;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.05);color:var(--muted);font-size:12px;" id="serviceWorkerInfo">service worker: proveravam</span></div></div>
     </section>
@@ -197,9 +244,9 @@ function loadLoserDays(){try{return JSON.parse(localStorage.getItem(loserDaysKey
 function saveLoserDays(l){localStorage.setItem(loserDaysKey(),JSON.stringify(l))}
 function goTab(name){document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));const t=document.getElementById('tab-'+name);if(t)t.classList.add('active');document.querySelectorAll('.tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.tab===name));window.scrollTo({top:0,behavior:'smooth'})}
 function bindFields(){const ids=['weight','waist','steps','waterLiters','calorieIn','protein','energy','hunger','note','tomorrowFocus'];const state=loadState();ids.forEach(id=>{const el=document.getElementById(id);if(!el)return;el.value=state.fields[id]||'';el.addEventListener('input',()=>{const s=loadState();s.fields[id]=el.value;saveState(s);renderAll()})})}
-function renderTodayHeader(){const now=new Date();const dayStart=new Date(now);dayStart.setHours(6,0,0,0);const dayEnd=new Date(now);dayEnd.setHours(23,0,0,0);const total=Math.max(1,dayEnd-dayStart);const current=Math.min(Math.max(0,now-dayStart),total);const dayPct=Math.round((current/total)*100);const state=loadState();const done=TASKS.filter(t=>state.tasks[t.id]).length;const systemPct=Math.round((done/TASKS.length)*100);const dateText=now.toLocaleDateString('sr-RS',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});setText('todayLabel',dateText.charAt(0).toUpperCase()+dateText.slice(1));setText('nowTime',now.toLocaleTimeString('sr-RS',{hour:'2-digit',minute:'2-digit'}));setText('dayPctText',dayPct+'%');setText('systemPctText',systemPct+'%');setText('scoreText',systemPct+'%');setWidth('dayProgress',dayPct);setWidth('systemProgress',systemPct);const ring=document.getElementById('scoreRing');if(ring)ring.style.setProperty('--score',systemPct+'%');const pill=document.getElementById('statusPill');const riskCount=computePriorityItems().filter(x=>x.type==='urgent').length;if(pill){if(systemPct>=85&&riskCount===0){pill.textContent='🟢 ČIST DAN';pill.style.background='rgba(61,220,132,.14)';pill.style.borderColor='rgba(61,220,132,.35)';pill.style.color='#9af3bf'}else if(riskCount>=2||(dayPct>70&&systemPct<40)){pill.textContent='🔴 RIZIČAN DAN';pill.style.background='rgba(255,107,107,.12)';pill.style.borderColor='rgba(255,107,107,.32)';pill.style.color='#ffc2c2'}else{pill.textContent='🟡 DAN U TOKU';pill.style.background='rgba(248,207,67,.12)';pill.style.borderColor='rgba(248,207,67,.35)';pill.style.color='#ffe067'}}const f=state.fields||{};setText('stepsValue',formatNum(f.steps||0));setText('weightValue',f.weight?`${f.weight} kg`:'—');setText('waterValue',`${Number(f.waterLiters||0).toFixed(1)} L`);setText('calorieValue',f.calorieIn?`${f.calorieIn} kcal`:'—')}
-function computePriorityItems(){const state=loadState();const f=state.fields||{};const hour=new Date().getHours();const items=[];TASKS.forEach(task=>{const done=!!state.tasks[task.id];let type=done?'done':(hour>=task.due?'urgent':'warning');let note=task.note;if(task.id==='walk'){const steps=Number(f.steps||0);note=`${steps.toLocaleString('sr-RS')} / 10.000 koraka`;if(!done&&steps>=8000)type='warning'}if(task.id==='mainMeal'&&f.calorieIn)note=`${f.calorieIn} kcal evidentirano`;if(task.id==='warmLemonWater'&&f.waterLiters)note=`${Number(f.waterLiters).toFixed(1)} L vode trenutno`;items.push({...task,type,done,note})});if(Number(f.waterLiters||0)<1.5&&hour>=15){items.unshift({id:'waterPriority',icon:'💧',title:'Voda je niska',note:`Trenutno ${Number(f.waterLiters||0).toFixed(1)} L od cilja 3.0 L`,type:'urgent',done:false})}if(Number(f.steps||0)<6000&&hour>=17){items.unshift({id:'stepsPriority',icon:'👣',title:'Koraci kasne',note:`Trenutno ${formatNum(f.steps||0)} koraka`,type:'urgent',done:false})}return items.sort((a,b)=>({urgent:0,warning:1,done:2}[a.type]-{urgent:0,warning:1,done:2}[b.type]))}
-function renderPriorityList(){const box=document.getElementById('priorityList');if(!box)return;const items=computePriorityItems().slice(0,6);box.innerHTML=items.map(item=>`<div class="priority-item ${item.type}"><div class="priority-icon">${item.icon}</div><div><strong>${escapeHtml(item.title)}</strong><div class="small">${escapeHtml(item.note||'')}</div></div>${item.id.startsWith('waterPriority')||item.id.startsWith('stepsPriority')?`<button class="ghost-btn" onclick="goTab('entry')">Unesi</button>`:`<button class="${item.done?'ghost-btn':'secondary-btn'}" onclick="toggleTask('${item.id}')">${item.done?'Vidi':'Zatvori'}</button>`}</div>`).join('')}
+function renderTodayHeader(){const now=new Date();const dayStart=new Date(now);dayStart.setHours(6,0,0,0);const dayEnd=new Date(now);dayEnd.setHours(23,0,0,0);const total=Math.max(1,dayEnd-dayStart);const current=Math.min(Math.max(0,now-dayStart),total);const dayPct=Math.round((current/total)*100);const state=loadState();const done=TASKS.filter(t=>state.tasks[t.id]).length;const systemPct=Math.round((done/TASKS.length)*100);const dateText=now.toLocaleDateString('sr-RS',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});setText('todayLabel',dateText.charAt(0).toUpperCase()+dateText.slice(1));setText('nowTime',now.toLocaleTimeString('sr-RS',{hour:'2-digit',minute:'2-digit'}));setText('dayPctText',dayPct+'%');setText('systemPctText',systemPct+'%');setText('scoreText',systemPct+'%');setWidth('dayProgress',dayPct);setWidth('systemProgress',systemPct);const ring=document.getElementById('scoreRing');if(ring)ring.style.setProperty('--score',systemPct+'%');const pill=document.getElementById('statusPill');const priorityItems=computePriorityItems();const riskCount=priorityItems.filter(x=>x.type==='urgent').length;if(pill){if(systemPct>=85&&riskCount===0){pill.textContent='🟢 DAN ZATVOREN';pill.style.background='rgba(61,220,132,.14)';pill.style.borderColor='rgba(61,220,132,.35)';pill.style.color='#9af3bf'}else if(riskCount>=2||(dayPct>70&&systemPct<40)){pill.textContent='🟠 DAN TRAŽI KOREKCIJU';pill.style.background='rgba(255,155,82,.12)';pill.style.borderColor='rgba(255,155,82,.32)';pill.style.color='#ffd4ad'}else{pill.textContent='🟡 DAN U TOKU';pill.style.background='rgba(248,207,67,.12)';pill.style.borderColor='rgba(248,207,67,.35)';pill.style.color='#ffe067'}}const f=state.fields||{};setText('stepsValue',formatNum(f.steps||0));setText('weightValue',f.weight?`${f.weight} kg`:'—');setText('waterValue',`${Number(f.waterLiters||0).toFixed(1)} L`);setText('calorieValue',f.calorieIn?`${f.calorieIn} kcal`:'—')}
+function computePriorityItems(){const state=loadState();const f=state.fields||{};const hour=new Date().getHours();const items=[];TASKS.forEach(task=>{const done=!!state.tasks[task.id];let type=done?'done':(hour>=task.due?'urgent':'warning');let note=task.note;if(task.id==='walk'){const steps=Number(f.steps||0);note=`${steps.toLocaleString('sr-RS')} / 10.000 koraka`;if(!done&&steps>=8000)type='warning'}if(task.id==='mainMeal'&&f.calorieIn)note=`${f.calorieIn} kcal evidentirano`;if(task.id==='warmLemonWater'&&f.waterLiters)note=`${Number(f.waterLiters).toFixed(1)} L vode trenutno`;items.push({...task,type,done,note})});if(Number(f.waterLiters||0)<1.5&&hour>=15){items.unshift({id:'waterPriority',icon:'💧',title:'Voda traži korekciju',note:`Trenutno ${Number(f.waterLiters||0).toFixed(1)} L od cilja 3.0 L`,type:'urgent',done:false})}if(Number(f.steps||0)<6000&&hour>=17){items.unshift({id:'stepsPriority',icon:'👣',title:'Koraci traže nastavak',note:`Trenutno ${formatNum(f.steps||0)} koraka`,type:'urgent',done:false})}return items.sort((a,b)=>({urgent:0,warning:1,done:2}[a.type]-{urgent:0,warning:1,done:2}[b.type]))}
+function renderPriorityList(){const box=document.getElementById('priorityList');if(!box)return;const items=computePriorityItems().slice(0,6);box.innerHTML=items.map(item=>`<div class="priority-item ${item.type}"><div class="priority-icon">${item.icon}</div><div><strong>${escapeHtml(item.title)}</strong><div class="small">${escapeHtml(item.note||'')}</div></div>${item.id.startsWith('waterPriority')||item.id.startsWith('stepsPriority')?`<button class="ghost-btn" onclick="goTab('entry')">Unesi</button>`:`<button class="${item.done?'ghost-btn':'secondary-btn'}" onclick="toggleTask('${item.id}')">${item.done?'Zabeleženo':'Zatvori'}</button>`}</div>`).join('')}
 function renderTaskChecklist(){const box=document.getElementById('taskChecklist');if(!box)return;const state=loadState();box.innerHTML=TASKS.map(task=>`<label class="priority-item ${state.tasks[task.id]?'done':'warning'}" for="task-${task.id}"><div class="priority-icon">${task.icon}</div><div><strong>${escapeHtml(task.title)}</strong><div class="small">${escapeHtml(task.note)}</div></div><input id="task-${task.id}" type="checkbox" ${state.tasks[task.id]?'checked':''} onchange="toggleTask('${task.id}')" style="width:22px;height:22px;"></label>`).join('')}
 function toggleTask(id){const state=loadState();state.tasks[id]=!state.tasks[id];saveState(state);renderAll()}
 function loadQuote(force=false){const box=document.getElementById('quoteText');if(!box)return;const today=new Date().toISOString().slice(0,10);const k='medscan-mobile-quote-'+today;let idx=Number(localStorage.getItem(k));const base=(new Date().getDate()+new Date().getMonth()+new Date().getFullYear())%QUOTES.length;if(Number.isNaN(idx))idx=base;if(force)idx=(idx+1)%QUOTES.length;localStorage.setItem(k,String(idx));box.textContent='“'+QUOTES[idx]+'”'}
@@ -210,6 +257,12 @@ function addLoserDay(){const dateEl=document.getElementById('loserDate');const r
 function deleteLoserDay(id){const list=loadLoserDays().filter(x=>x.id!==id);saveLoserDays(list);renderLoserDays()}
 function renderLoserDays(){const box=document.getElementById('loserDaysBox');if(!box)return;const list=loadLoserDays();if(!list.length){box.innerHTML='<div class="empty">Još nema loser day unosa.</div>';return}box.innerHTML=list.map(item=>`<div class="item"><div class="row-between"><strong>${escapeHtml(item.date)}</strong><button class="delete-mini" onclick="deleteLoserDay('${item.id}')">Obriši</button></div><div style="margin-top:8px;">${escapeHtml(item.reason)}</div></div>`).join('')}
 function updateRecords(){const state=loadState();const f=state.fields||{};const records=loadRecords();const weight=parseNum(f.weight);const waist=parseNum(f.waist);const steps=parseNum(f.steps)||0;if(weight!==null&&(records.bestWeight===null||weight<records.bestWeight))records.bestWeight=weight;if(waist!==null&&(records.minWaist===null||waist<records.minWaist))records.minWaist=waist;if(steps>(records.bestSteps||0))records.bestSteps=steps;saveRecords(records)}
+
+function computeRecoveryScore(){const state=loadState();const f=state.fields||{};const entries=[{label:'San / energija',score:Math.round((((Math.min(10,Math.max(0,Number(f.energy||0))))/10)*60)+((Math.min(10,Math.max(0,10-Math.abs((Number(f.hunger||5)-4)*2))))/10)*40),text:`Energija ${f.energy||'—'} / Glad ${f.hunger||'—'}`},{label:'Voda',score:Math.min(100,Math.round((Number(f.waterLiters||0)/3)*100)),text:`${Number(f.waterLiters||0).toFixed(1)} L od 3.0 L`},{label:'Koraci',score:Math.min(100,Math.round((Number(f.steps||0)/10000)*100)),text:`${formatNum(f.steps||0)} od 10.000`},{label:'Sistem',score:Math.round((TASKS.filter(t=>state.tasks?.[t.id]).length/TASKS.length)*100),text:`${TASKS.filter(t=>state.tasks?.[t.id]).length}/${TASKS.length} zatvoreno`}];const total=Math.round(entries.reduce((sum,item)=>sum+item.score,0)/entries.length);let title='Ritam se gradi.';let subtitle='Telo danas traži miran, stabilan nastavak.';if(total>=80){title='Oporavak je jak.';subtitle='Samo nastavi isti ritam.'}else if(total>=55){title='Dobar oporavak.';subtitle='Mali potezi danas dižu sutrašnji rezultat.'}else{title='Telo traži recovery.';subtitle='Pojačaj vodu, hodanje i mirnije zatvaranje dana.'}return {total,entries,title,subtitle}}
+function renderRecovery(){const info=computeRecoveryScore();setText('recoveryScoreText',info.total+'%');setText('recoveryHeadline',info.title);setText('recoverySubtext',info.subtitle);const ring=document.getElementById('recoveryRing');if(ring)ring.style.setProperty('--recovery',info.total+'%');const box=document.getElementById('recoveryList');if(!box)return;box.innerHTML=info.entries.map(item=>`<div class="recovery-item"><span>${escapeHtml(item.label)}</span><span>${item.score}% · ${escapeHtml(item.text)}</span></div>`).join('')}
+function computeDamageControl(){const state=loadState();const f=state.fields||{};const events=Array.isArray(state.fieldEvents)?state.fieldEvents:[];const triggers=[];if(events.some(e=>e.type==='beer'))triggers.push('zabeleženo pivo');if(events.some(e=>e.type==='food'||e.type==='soda'))triggers.push('hrana/piće van plana');if(!state.tasks?.walk&&(new Date().getHours()>=19||Number(f.steps||0)<5000&&new Date().getHours()>=18))triggers.push('šetnja nije zatvorena');const active=triggers.length>0;const actions=[{icon:'🚶',title:'20 min lagane šetnje',text:'Ne juri kaznu. Samo vrati ritam kretanjem.'},{icon:'💧',title:'Dodatnih 1L vode',text:'Voda spušta haos i vraća osećaj kontrole.'},{icon:'🥖',title:'Bez hleba večeras',text:'Jedna čista odluka zatvara štetu bez drame.'},{icon:'🌙',title:'Spavanje pre 00:00',text:'Sutra kreće lakše kad se noć zatvori ranije.'}];let reason='Za sada nema potrebe za damage control planom.';if(active)reason='Aktiviran jer je primećeno: '+triggers.join(', ')+'. Nema osude — samo sledeći potez.';return {active,triggers,actions,reason}}
+function renderDamageControl(){const info=computeDamageControl();const card=document.getElementById('damageCard');const status=document.getElementById('damageStatus');const reason=document.getElementById('damageReason');const actions=document.getElementById('damageActions');if(card)card.classList.toggle('active',info.active);if(status){status.className='damage-status '+(info.active?'active':'idle');status.textContent=info.active?'🟠 DAMAGE CONTROL AKTIVIRAN':'🟢 Stabilan ritam'}if(reason)reason.textContent=info.reason;if(actions){actions.innerHTML=(info.active?info.actions:[{icon:'🧭',title:'Nastavi plan bez drame',text:'Jedan čist sledeći potez vredi više od perfekcionizma.'}]).map(item=>`<div class="damage-action"><div class="dot">${item.icon}</div><div><strong>${escapeHtml(item.title)}</strong><div class="small">${escapeHtml(item.text)}</div></div></div>`).join('')}}
+
 function renderRecords(){const box=document.getElementById('recordList');if(!box)return;const records=loadRecords();box.innerHTML=`<div class="item"><div class="small">Najniža težina</div><strong style="font-size:26px;">${records.bestWeight ?? '—'}${records.bestWeight!==null?' kg':''}</strong></div><div class="item"><div class="small">Najmanji struk</div><strong style="font-size:26px;">${records.minWaist ?? '—'}${records.minWaist!==null?' cm':''}</strong></div><div class="item"><div class="small">Najviše koraka</div><strong style="font-size:26px;">${formatNum(records.bestSteps||0)}</strong></div>`}
 function saveDay(){updateRecords();renderAll();alert('Dnevni unos je sačuvan.');goTab('today')}
 function historyEntries(days=30){const out=[];const today=new Date();for(let i=days-1;i>=0;i--){const d=new Date(today);d.setDate(today.getDate()-i);const key='medscan-mobile-day-'+d.toISOString().slice(0,10);let state=null;try{state=JSON.parse(localStorage.getItem(key)||'null')}catch(e){}out.push({date:d.toISOString().slice(0,10),state,weight:state?.fields?.weight?Number(state.fields.weight):null,waist:state?.fields?.waist?Number(state.fields.waist):null,clean:isCleanDay(state)})}return out}
@@ -217,14 +270,41 @@ function isCleanDay(state){if(!state)return false;const done=TASKS.filter(t=>sta
 function computeStreaks(data){let current=0;for(let i=data.length-1;i>=0;i--){if(data[i].clean)current++;else break}let best=0,run=0;data.forEach(d=>{if(d.clean)run++;else run=0;best=Math.max(best,run)});return {current,best}}
 function renderHistory(){const data=historyEntries(30);const streaks=computeStreaks(data);const weights=data.filter(d=>d.weight!==null);setText('streakNow',String(streaks.current));setText('streakBest',String(streaks.best));setText('weightEntries',String(weights.length));if(weights.length>=2){const delta=(weights[weights.length-1].weight-weights[0].weight).toFixed(1);setText('weightDelta',(delta>0?'+':'')+delta+' kg')}else{setText('weightDelta','—')}drawLineChart('weightChart',data,'weight','kg','#58c0ff');drawLineChart('waistChart',data,'waist','cm','#a97cff')}
 function drawLineChart(canvasId,data,keyName,unit,color){const canvas=document.getElementById(canvasId);if(!canvas)return;const ctx=canvas.getContext('2d');if(!ctx)return;ctx.clearRect(0,0,canvas.width,canvas.height);ctx.fillStyle='rgba(255,255,255,.03)';ctx.fillRect(0,0,canvas.width,canvas.height);const points=data.map((d,i)=>({i,value:d[keyName],clean:d.clean})).filter(x=>x.value!==null);for(let y=36;y<canvas.height;y+=44){ctx.strokeStyle='rgba(255,255,255,.08)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(30,y);ctx.lineTo(canvas.width-18,y);ctx.stroke()}if(points.length<2){ctx.fillStyle='#9fb0d4';ctx.font='16px sans-serif';ctx.fillText('Unesi bar 2 vrednosti za graf.',28,canvas.height/2);return}const min=Math.min(...points.map(p=>p.value))-0.5;const max=Math.max(...points.map(p=>p.value))+0.5;const x=i=>40+(i/Math.max(1,data.length-1))*(canvas.width-68);const y=v=>(canvas.height-28)-((v-min)/Math.max(1,max-min))*(canvas.height-58);ctx.strokeStyle=color;ctx.lineWidth=4;ctx.beginPath();points.forEach((p,idx)=>{const px=x(p.i),py=y(p.value);if(idx===0)ctx.moveTo(px,py);else ctx.lineTo(px,py)});ctx.stroke();points.forEach(p=>{const px=x(p.i),py=y(p.value);ctx.fillStyle=p.clean?'#3ddc84':color;ctx.beginPath();ctx.arc(px,py,5.5,0,Math.PI*2);ctx.fill()});ctx.fillStyle='#d7e6ff';ctx.font='12px sans-serif';ctx.fillText(max.toFixed(1)+' '+unit,6,y(max)+4);ctx.fillText(min.toFixed(1)+' '+unit,6,y(min)+4)}
-function reportText(){const state=loadState();const f=state.fields||{};const doneTasks=TASKS.filter(t=>state.tasks?.[t.id]).map(t=>'✓ '+t.title).join('\n')||'-';const fieldEvents=(state.fieldEvents||[]).map(e=>`${e.time} - ${eventLabel(e.type)} - ${e.text}`).join('\n')||'-';return ['MEDSCAN dnevni izveštaj','','Datum: '+new Date().toLocaleDateString('sr-RS'),'Težina: '+(f.weight||'-')+' kg','Obim struka: '+(f.waist||'-')+' cm','Koraci: '+(f.steps||'-'),'Voda: '+(f.waterLiters||'-')+' L','Kalorije: '+(f.calorieIn||'-'),'Proteini: '+(f.protein||'-'),'Energija: '+(f.energy||'-'),'Glad: '+(f.hunger||'-'),'','Zatvoreno danas:',doneTasks,'','Terenski dnevnik:',fieldEvents,'','Beleška:',(f.note||'-'),'','Sutrašnji fokus:',(f.tomorrowFocus||'-')].join('\n')}
+function reportText(){const state=loadState();const f=state.fields||{};const doneTasks=TASKS.filter(t=>state.tasks?.[t.id]).map(t=>'✓ '+t.title).join('
+')||'-';const fieldEvents=(state.fieldEvents||[]).map(e=>`${e.time} - ${eventLabel(e.type)} - ${e.text}`).join('
+')||'-';const damage=computeDamageControl();const recovery=computeRecoveryScore();const status=document.getElementById('statusPill')?.textContent||'-';return `MEDSCAN dnevni rezime
+
+Datum: ${new Date().toLocaleDateString('sr-RS')}
+Status: ${status}
+Recovery: ${recovery.total}%
+
+Težina: ${f.weight||'-'} kg
+Struk: ${f.waist||'-'} cm
+Koraci: ${f.steps||'-'}
+Voda: ${f.waterLiters||'-'} L
+Kalorije: ${f.calorieIn||'-'}
+Proteini: ${f.protein||'-'} g
+Energija: ${f.energy||'-'} / 10
+Glad: ${f.hunger||'-'} / 10
+
+Zatvoreno:
+${doneTasks}
+
+Terenski dnevnik:
+${fieldEvents}
+
+Damage control: ${damage.active ? 'aktivan' : 'nije aktivan'}
+Razlog: ${damage.active ? damage.triggers.join(', ') : '-'}
+
+Beleška:
+${f.note||'-'}`}
 function sendEmail(){const subject=encodeURIComponent('MEDSCAN dnevni izveštaj - '+new Date().toLocaleDateString('sr-RS'));const body=encodeURIComponent(reportText());window.location.href=`mailto:?subject=${subject}&body=${body}`}
 function exportJSON(){const payload={today:loadState(),loserDays:loadLoserDays(),records:loadRecords()};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='medscan-mobile-export.json';a.click();URL.revokeObjectURL(url)}
 function resetToday(){if(!confirm('Resetovati samo današnji unos?'))return;localStorage.removeItem(todayKey());bindFields();renderAll()}
 function eventLabel(type){const map={info:'ℹ️ Info',water:'💧 Voda',beer:'🍺 Pivo',soda:'🥤 Gazirano / sok',food:'🍽️ Hrana van plana',walk:'🚶 Šetnja',symptom:'🩺 Simptom'};return map[type]||'ℹ️ Info'}
 function initInstall(){window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;const banner=document.getElementById('installBanner');if(banner)banner.classList.add('show')});[document.getElementById('installBtnTop'),document.getElementById('installBtnMore')].filter(Boolean).forEach(btn=>btn.addEventListener('click',async()=>{if(!deferredPrompt){alert('Install opcija se pojavljuje kad browser proceni da je app spremna. Na iPhone-u koristi Share → Add to Home Screen.');return}deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null}));const standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;setText('pwaStatus',standalone?'App je otvoren kao instalirana aplikacija.':'App trenutno radi kao web/PWA stranica.')}
 function registerServiceWorkerStatus(){const chip=document.getElementById('serviceWorkerInfo');if(!chip)return;if('serviceWorker' in navigator){navigator.serviceWorker.getRegistration().then(reg=>{chip.textContent=reg?'service worker: aktivan':'service worker: nije registrovan'}).catch(()=>chip.textContent='service worker: greška')}else{chip.textContent='service worker: nepodržan'}}
-function renderAll(){renderTodayHeader();renderPriorityList();renderTaskChecklist();renderFieldEvents();renderLoserDays();renderHistory();renderRecords();loadQuote(false)}
+function renderAll(){renderTodayHeader();renderPriorityList();renderRecovery();renderDamageControl();renderTaskChecklist();renderFieldEvents();renderLoserDays();renderHistory();renderRecords();loadQuote(false)}
 function setText(id,text){const el=document.getElementById(id);if(el)el.textContent=text}
 function setWidth(id,val){const el=document.getElementById(id);if(el)el.style.width=Math.max(0,Math.min(100,val))+'%'}
 function parseNum(v){if(v===''||v===null||v===undefined)return null;const n=Number(v);return Number.isFinite(n)?n:null}
