@@ -301,8 +301,30 @@ function todayKey(){return 'medscan-mobile-day-'+new Date().toISOString().slice(
 function loserDaysKey(){return 'medscan-mobile-loser-days'}
 function recordsKey(){return 'medscan-mobile-records'}
 function defaultState(){return {tasks:{},risks:{},fields:{},fieldEvents:[],waterEntries:[]}}
-function loadState(){try{return JSON.parse(localStorage.getItem(todayKey())||JSON.stringify(defaultState()))}catch(e){return defaultState()}}
-function saveState(s){localStorage.setItem(todayKey(),JSON.stringify(s))}
+function normalizeState(raw){
+  const base=defaultState();
+  const obj=(raw&&typeof raw==='object')?raw:{};
+  return {
+    tasks:(obj.tasks&&typeof obj.tasks==='object')?obj.tasks:{},
+    risks:(obj.risks&&typeof obj.risks==='object')?obj.risks:{},
+    fields:(obj.fields&&typeof obj.fields==='object')?obj.fields:{},
+    fieldEvents:Array.isArray(obj.fieldEvents)?obj.fieldEvents:[],
+    waterEntries:Array.isArray(obj.waterEntries)?obj.waterEntries:[]
+  };
+}
+function loadState(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(todayKey())||'null');
+    const normalized=normalizeState(raw);
+    if(JSON.stringify(raw)!==JSON.stringify(normalized)){localStorage.setItem(todayKey(),JSON.stringify(normalized))}
+    return normalized;
+  }catch(e){
+    const base=defaultState();
+    localStorage.setItem(todayKey(),JSON.stringify(base));
+    return base;
+  }
+}
+function saveState(s){localStorage.setItem(todayKey(),JSON.stringify(normalizeState(s)))}
 function loadRecords(){try{return JSON.parse(localStorage.getItem(recordsKey())||'{"bestWeight":null,"minWaist":null,"bestSteps":0}')}catch(e){return {bestWeight:null,minWaist:null,bestSteps:0}}}
 function saveRecords(r){localStorage.setItem(recordsKey(),JSON.stringify(r))}
 function loadLoserDays(){try{return JSON.parse(localStorage.getItem(loserDaysKey())||'[]')}catch(e){return []}}
