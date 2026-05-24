@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>MEDSCAN Mobile v3</title>
+  <title>MEDSCAN Mobile v6</title>
   <meta name="theme-color" content="#0b1224" />
   <link rel="manifest" href="manifest.webmanifest">
   <style>
@@ -119,7 +119,7 @@
 <body>
   <div class="app">
     <div class="top-card">
-      <div class="brand"><div class="logo">🩺</div><div><h1>MEDSCAN Mobile</h1><div class="subtitle">Postaješ čovek koji zatvara dan. Brz unos, jasan nastavak.</div></div></div>
+      <div class="brand"><div class="logo">🩺</div><div><h1>MEDSCAN Mobile</h1><div class="subtitle">Postaješ čovek koji zatvara dan. Brz unos, jasan nastavak.</div><div class="version-badge">v6 polish · safe mobile build</div></div></div>
       <button class="ghost-btn" onclick="goTab('history')">Istorija</button>
     </div>
     <div id="installBanner" class="install-banner top-card" style="padding:14px 16px;">
@@ -154,7 +154,7 @@
           <div class="story-stat"><span class="k">Koraci</span><strong id="storySteps">0</strong></div>
           <div class="story-stat"><span class="k">Odstupanja</span><strong id="storyDeviations">0</strong></div>
         </div>
-        <div id="storyNote" class="story-note">Danas tek počinje. Zatvori ritam korak po korak.</div>
+        <div id="storyNote" class="story-note">Danas tek počinje. Zatvori ritam korak po korak.</div><div class="quick-row"><button type="button" class="quick-soft-btn" onclick="addWaterEntry(250,\'Čaša\')">+ Čaša vode</button><button type="button" class="quick-soft-btn" onclick="goTab(\'entry\')">Otvori brzi unos</button></div>
       </div>
 
       <div class="card input-card">
@@ -273,6 +273,7 @@
     </section>
 
     <section id="tab-more" class="section">
+      <div class="card input-card"><div class="eyebrow" style="margin-bottom:6px;">Build</div><h3 class="section-title" style="font-size:22px;margin-bottom:4px;">Stabilna verzija</h3><div class="small">safe schema v6 · mobile polish · water branch</div></div>
       <div class="card input-card">
         <h3 class="section-title">Više</h3>
         <div class="field"><label>Kratka beleška</label><textarea id="note" placeholder="Kako je prošao dan, šta popravljaš sutra..."></textarea></div>
@@ -337,7 +338,7 @@ function syncWaterEntriesFromManual(state){ensureWaterState(state);const liters=
 function addWaterEntry(amountMl,label){const state=loadState();ensureWaterState(state);const now=new Date();state.waterEntries.unshift({id:cryptoRandom(),label,amountMl,time:now.toLocaleTimeString('sr-RS',{hour:'2-digit',minute:'2-digit'})});recalcWater(state);saveState(state);renderAll();showToast(`Dodato ${amountMl}ml vode.`)}
 function addCustomWater(){const input=document.getElementById('waterCustomMl');if(!input)return;const amount=Math.round(Number(input.value||0));if(!amount||amount<50){alert('Unesi smislen unos u ml.');return}addWaterEntry(amount,'Ručni unos');input.value=''}
 function deleteWaterEntry(id){const state=loadState();ensureWaterState(state);state.waterEntries=state.waterEntries.filter(item=>item.id!==id);recalcWater(state);saveState(state);renderAll()}
-function renderWaterTracker(){const state=loadState();ensureWaterState(state);const totalMl=recalcWater(state);saveState(state);const totalL=totalMl/1000;const targetL=3;const remaining=Math.max(0,targetL-totalL);const pct=Math.min(100,Math.round((totalL/targetL)*100));setText('waterTrackerTotal',`${totalL.toFixed(1)} L / 3.0 L`);setText('waterRemainingText',remaining>0?`Do cilja fali još ${remaining.toFixed(1)} L.`:'Cilj vode je zatvoren.');setWidth('waterTrackerFill',pct);const hint=document.getElementById('waterHint');if(hint){const hour=new Date().getHours();let msg='Voda je danas na nuli. Prva čaša gradi ritam.';if(totalL>=3)msg='Odlično. Voda je zatvorena za danas.';else if(hour>=18&&remaining>0)msg=`Veče je. Za miran kraj dana fali još ${remaining.toFixed(1)} L.`;else if(hour>=14&&totalL<1.5)msg='Ritam vode kasni. Dodaj 1–2 unosa da telo sustigne dan.';else if(totalL>0)msg=`Dobar ritam. Još ${remaining.toFixed(1)} L do cilja.`;hint.textContent=msg}const box=document.getElementById('waterEntriesBox');if(box){if(!state.waterEntries.length){box.innerHTML='<div class="empty">Još nema unosa vode za danas.</div>'}else{box.innerHTML=state.waterEntries.map(item=>`<div class="water-item"><div class="row-between"><strong>${escapeHtml(item.label)}</strong><button class="delete-mini" onclick="deleteWaterEntry('${item.id}')">Obriši</button></div><div class="small" style="margin-top:6px;">${escapeHtml(item.time)} · ${Number(item.amountMl).toLocaleString('sr-RS')} ml</div></div>`).join('')}}}
+function renderWaterTracker(){const state=loadState();ensureWaterState(state);const totalMl=recalcWater(state);saveState(state);const totalL=totalMl/1000;const targetL=3;const remaining=Math.max(0,targetL-totalL);const pct=Math.min(100,Math.round((totalL/targetL)*100));setText('waterTrackerTotal',`${totalL.toFixed(1)} L / 3.0 L`);const glasses=Math.ceil((remaining*1000)/250);setText('waterRemainingText',remaining>0?`Do cilja fali još ${remaining.toFixed(1)} L${glasses>0?` · oko ${glasses} čaše`:''}.`:'Cilj vode je zatvoren.');setWidth('waterTrackerFill',pct);const hint=document.getElementById('waterHint');if(hint){const hour=new Date().getHours();let msg='Voda je danas na nuli. Prva čaša gradi ritam.';if(totalL>=3)msg='Odlično. Voda je zatvorena za danas.';else if(hour>=18&&remaining>0)msg=`Veče je. Za miran kraj dana fali još ${remaining.toFixed(1)} L.`;else if(hour>=14&&totalL<1.5)msg='Ritam vode kasni. Dodaj 1–2 unosa da telo sustigne dan.';else if(totalL>0)msg=`Dobar ritam. Još ${remaining.toFixed(1)} L do cilja.`;hint.textContent=msg}const box=document.getElementById('waterEntriesBox');if(box){if(!state.waterEntries.length){box.innerHTML='<div class="empty">Još nema unosa vode za danas.</div>'}else{box.innerHTML=state.waterEntries.map(item=>`<div class="water-item"><div class="row-between"><strong>${escapeHtml(item.label)}</strong><button class="delete-mini" onclick="deleteWaterEntry('${item.id}')">Obriši</button></div><div class="small" style="margin-top:6px;">${escapeHtml(item.time)} · ${Number(item.amountMl).toLocaleString('sr-RS')} ml</div></div>`).join('')}}}
 function goTab(name){document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));const t=document.getElementById('tab-'+name);if(t)t.classList.add('active');document.querySelectorAll('.tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.tab===name));window.scrollTo({top:0,behavior:'smooth'})}
 
 function bindBottomNav(){
