@@ -63,9 +63,10 @@
     .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.toolbar > *{flex:1}
     .delete-mini{border:1px solid rgba(255,107,107,.3);background:rgba(255,107,107,.09);color:#ffd1d1;border-radius:12px;padding:10px 12px;font-weight:800;cursor:pointer}
     .note-box{padding:16px;border-radius:20px;background:linear-gradient(135deg, rgba(255,210,79,.1), rgba(83,184,255,.08));border:1px solid var(--line)}
-    .bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));width:min(560px, calc(100% - 18px));display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:10px;z-index:20;background:rgba(7,13,27,.9);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);backdrop-filter:blur(14px)}
+    .bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(12px + env(safe-area-inset-bottom));width:min(560px, calc(100% - 18px));display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:10px;z-index:9999;background:rgba(7,13,27,.9);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);backdrop-filter:blur(14px);pointer-events:auto;touch-action:manipulation}
     .tab{border:0;background:transparent;color:var(--muted);border-radius:18px;min-height:56px;font-weight:900;cursor:pointer;display:grid;gap:3px;place-items:center;font-size:12px;padding:8px 4px}
     .tab.active{background:rgba(255,255,255,.08);color:var(--text)}
+    .bottom-nav .tab{pointer-events:auto;touch-action:manipulation}
     .install-banner{display:none;margin-bottom:16px;padding:14px;border-radius:20px;border:1px solid rgba(83,184,255,.22);background:rgba(83,184,255,.08)}
     .install-banner.show{display:block}
   
@@ -283,11 +284,11 @@
   </div>
 
   <nav class="bottom-nav">
-    <button class="tab active" data-tab="today" onclick="goTab('today')"><span>🏠</span><span>Danas</span></button>
-    <button class="tab" data-tab="entry" onclick="goTab('entry')"><span>✍️</span><span>Unos</span></button>
-    <button class="tab" data-tab="history" onclick="goTab('history')"><span>📈</span><span>Istorija</span></button>
-    <button class="tab" data-tab="log" onclick="goTab('log')"><span>🧭</span><span>Log</span></button>
-    <button class="tab" data-tab="more" onclick="goTab('more')"><span>⚙️</span><span>Više</span></button>
+    <button type="button" class="tab active" data-tab="today" onclick="goTab('today')"><span>🏠</span><span>Danas</span></button>
+    <button type="button" class="tab" data-tab="entry" onclick="goTab('entry')"><span>✍️</span><span>Unos</span></button>
+    <button type="button" class="tab" data-tab="history" onclick="goTab('history')"><span>📈</span><span>Istorija</span></button>
+    <button type="button" class="tab" data-tab="log" onclick="goTab('log')"><span>🧭</span><span>Log</span></button>
+    <button type="button" class="tab" data-tab="more" onclick="goTab('more')"><span>⚙️</span><span>Više</span></button>
   </nav>
 
   <div id="saveToast" class="save-toast">Sačuvano. Ritam ide dalje.</div>
@@ -316,6 +317,26 @@ function addCustomWater(){const input=document.getElementById('waterCustomMl');i
 function deleteWaterEntry(id){const state=loadState();ensureWaterState(state);state.waterEntries=state.waterEntries.filter(item=>item.id!==id);recalcWater(state);saveState(state);renderAll()}
 function renderWaterTracker(){const state=loadState();ensureWaterState(state);const totalMl=recalcWater(state);saveState(state);const totalL=totalMl/1000;const targetL=3;const remaining=Math.max(0,targetL-totalL);const pct=Math.min(100,Math.round((totalL/targetL)*100));setText('waterTrackerTotal',`${totalL.toFixed(1)} L / 3.0 L`);setText('waterRemainingText',remaining>0?`Do cilja fali još ${remaining.toFixed(1)} L.`:'Cilj vode je zatvoren.');setWidth('waterTrackerFill',pct);const hint=document.getElementById('waterHint');if(hint){const hour=new Date().getHours();let msg='Voda je danas na nuli. Prva čaša gradi ritam.';if(totalL>=3)msg='Odlično. Voda je zatvorena za danas.';else if(hour>=18&&remaining>0)msg=`Veče je. Za miran kraj dana fali još ${remaining.toFixed(1)} L.`;else if(hour>=14&&totalL<1.5)msg='Ritam vode kasni. Dodaj 1–2 unosa da telo sustigne dan.';else if(totalL>0)msg=`Dobar ritam. Još ${remaining.toFixed(1)} L do cilja.`;hint.textContent=msg}const box=document.getElementById('waterEntriesBox');if(box){if(!state.waterEntries.length){box.innerHTML='<div class="empty">Još nema unosa vode za danas.</div>'}else{box.innerHTML=state.waterEntries.map(item=>`<div class="water-item"><div class="row-between"><strong>${escapeHtml(item.label)}</strong><button class="delete-mini" onclick="deleteWaterEntry('${item.id}')">Obriši</button></div><div class="small" style="margin-top:6px;">${escapeHtml(item.time)} · ${Number(item.amountMl).toLocaleString('sr-RS')} ml</div></div>`).join('')}}}
 function goTab(name){document.querySelectorAll('.section').forEach(el=>el.classList.remove('active'));const t=document.getElementById('tab-'+name);if(t)t.classList.add('active');document.querySelectorAll('.tab').forEach(btn=>btn.classList.toggle('active',btn.dataset.tab===name));window.scrollTo({top:0,behavior:'smooth'})}
+
+function bindBottomNav(){
+  const nav=document.querySelector('.bottom-nav');
+  if(!nav) return;
+  nav.querySelectorAll('.tab').forEach(btn=>{
+    btn.setAttribute('type','button');
+    btn.addEventListener('click',(e)=>{
+      e.preventDefault();
+      e.stopPropagation();
+      const name=btn.dataset.tab;
+      if(name) goTab(name);
+    }, { passive:false });
+    btn.addEventListener('pointerup',(e)=>{
+      e.preventDefault();
+      const name=btn.dataset.tab;
+      if(name) goTab(name);
+    }, { passive:false });
+  });
+}
+
 function bindFields(){const ids=['weight','waist','steps','waterLiters','calorieIn','protein','energy','hunger','sleep','pulse','note','tomorrowFocus'];const state=loadState();ids.forEach(id=>{const el=document.getElementById(id);if(!el)return;el.value=state.fields[id]||'';el.addEventListener('input',()=>{const s=loadState();s.fields[id]=el.value;if(id==='waterLiters'){syncWaterEntriesFromManual(s)}saveState(s);renderAll()})})}
 function renderTodayHeader(){const now=new Date();const dayStart=new Date(now);dayStart.setHours(6,0,0,0);const dayEnd=new Date(now);dayEnd.setHours(23,0,0,0);const total=Math.max(1,dayEnd-dayStart);const current=Math.min(Math.max(0,now-dayStart),total);const dayPct=Math.round((current/total)*100);const state=loadState();const done=TASKS.filter(t=>state.tasks[t.id]).length;const systemPct=Math.round((done/TASKS.length)*100);const dateText=now.toLocaleDateString('sr-RS',{weekday:'long',day:'2-digit',month:'2-digit',year:'numeric'});setText('todayLabel',dateText.charAt(0).toUpperCase()+dateText.slice(1));setText('nowTime',now.toLocaleTimeString('sr-RS',{hour:'2-digit',minute:'2-digit'}));setText('dayPctText',dayPct+'%');setText('systemPctText',systemPct+'%');setText('scoreText',systemPct+'%');setWidth('dayProgress',dayPct);setWidth('systemProgress',systemPct);const ring=document.getElementById('scoreRing');if(ring)ring.style.setProperty('--score',systemPct+'%');const pill=document.getElementById('statusPill');const priorityItems=computePriorityItems();const riskCount=priorityItems.filter(x=>x.type==='urgent').length;if(pill){if(systemPct>=85&&riskCount===0){pill.textContent='🟢 DAN ZATVOREN';pill.style.background='rgba(61,220,132,.14)';pill.style.borderColor='rgba(61,220,132,.35)';pill.style.color='#9af3bf'}else if(riskCount>=2||(dayPct>70&&systemPct<40)){pill.textContent='🟠 DAN TRAŽI KOREKCIJU';pill.style.background='rgba(255,155,82,.12)';pill.style.borderColor='rgba(255,155,82,.32)';pill.style.color='#ffd4ad'}else{pill.textContent='🟡 DAN U TOKU';pill.style.background='rgba(248,207,67,.12)';pill.style.borderColor='rgba(248,207,67,.35)';pill.style.color='#ffe067'}}const f=state.fields||{};setText('stepsValue',formatNum(f.steps||0));setText('weightValue',f.weight?`${f.weight} kg`:'—');setText('waterValue',`${Number(f.waterLiters||0).toFixed(1)} L`);setText('calorieValue',f.calorieIn?`${f.calorieIn} kcal`:'—')}
 
@@ -387,6 +408,6 @@ function parseNum(v){if(v===''||v===null||v===undefined)return null;const n=Numb
 function formatNum(v){return Number(v||0).toLocaleString('sr-RS')}
 function cryptoRandom(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
 function escapeHtml(str){return String(str ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#39;")}
-bindFields();initInstall();registerServiceWorkerStatus();renderAll();setInterval(renderTodayHeader,60000);
+bindBottomNav();bindFields();initInstall();registerServiceWorkerStatus();renderAll();setInterval(renderTodayHeader,60000);
 </script>
 </body></html>
