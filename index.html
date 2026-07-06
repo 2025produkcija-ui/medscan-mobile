@@ -114,6 +114,17 @@
     .save-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
     @keyframes softPulse{0%,100%{box-shadow:0 0 0 rgba(83,184,255,0)}50%{box-shadow:0 0 0 10px rgba(83,184,255,.08)}}
 
+
+    /* RESET 10 / PREKID LANCA MODULE */
+    .reset10-card{position:relative;overflow:hidden;margin-bottom:16px;border-color:rgba(255,107,107,.24);background:radial-gradient(circle at 85% 10%, rgba(255,107,107,.20), transparent 30%),linear-gradient(180deg, rgba(35,16,28,.96), rgba(9,17,34,.92));}
+    .reset10-card::before{content:"";position:absolute;inset:-40%;background:radial-gradient(circle, rgba(255,210,79,.12), transparent 38%);transform:translate(38%,-22%);pointer-events:none}
+    .reset10-card > *{position:relative}.reset10-title{font-size:clamp(26px,8vw,42px);line-height:1.02;letter-spacing:-.05em;margin:6px 0 8px}.reset10-lead{color:#ffd7d7;line-height:1.45;margin:0 0 14px}.reset10-main-btn{width:100%;min-height:72px;border-radius:22px;font-size:20px;letter-spacing:-.02em;box-shadow:0 18px 40px rgba(255,107,107,.18)}
+    .reset10-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}.reset10-stat{padding:12px;border-radius:16px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);text-align:center}.reset10-stat strong{display:block;font-size:24px;letter-spacing:-.04em}.reset10-stat span{font-size:12px;color:#cbd6ef}
+    .reset10-overlay{position:fixed;inset:0;z-index:100000;display:none;background:radial-gradient(circle at 50% 0%, rgba(83,184,255,.18), transparent 34%),linear-gradient(180deg, rgba(4,9,20,.98), rgba(10,17,32,.985));color:var(--text);overflow:auto;padding:18px 16px calc(24px + var(--safe-bottom));}
+    .reset10-overlay.active{display:block}.reset10-shell{max-width:560px;margin:0 auto;min-height:calc(100vh - 42px);display:flex;flex-direction:column}.reset10-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.reset10-badge{display:inline-flex;gap:8px;align-items:center;padding:10px 13px;border-radius:999px;background:rgba(255,107,107,.14);border:1px solid rgba(255,107,107,.28);color:#ffd0d0;font-weight:900;font-size:13px}.reset10-close{min-width:50px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:var(--text);font-weight:900;font-size:18px;cursor:pointer}
+    .reset10-panel{flex:1;display:flex;flex-direction:column;justify-content:center;border:1px solid rgba(255,255,255,.10);border-radius:28px;padding:22px;background:linear-gradient(180deg, rgba(18,30,58,.78), rgba(8,15,30,.88));box-shadow:0 24px 70px rgba(0,0,0,.45);backdrop-filter:blur(16px)}.reset10-step-label{text-transform:uppercase;letter-spacing:.18em;color:#9fd6ff;font-weight:900;font-size:12px}.reset10-panel h2{font-size:clamp(34px,11vw,62px);letter-spacing:-.07em;line-height:.96;margin:10px 0 10px}.reset10-copy{font-size:18px;line-height:1.45;color:#dbe8ff;margin:0 0 18px}.reset10-timer{font-size:clamp(58px,18vw,104px);font-weight:1000;letter-spacing:-.08em;line-height:.9;margin:12px 0 18px;text-align:center}.reset10-actions{display:grid;gap:10px}.reset10-action-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.reset10-option{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.055);color:var(--text);border-radius:18px;padding:14px;text-align:left;font-weight:900;cursor:pointer;min-height:58px}.reset10-option.selected{border-color:rgba(83,184,255,.45);background:rgba(83,184,255,.14);box-shadow:0 0 0 4px rgba(83,184,255,.08)}.reset10-check{display:flex;align-items:center;gap:12px;padding:14px;border-radius:18px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.08);font-weight:850}.reset10-check input{width:22px;height:22px;accent-color:#53b8ff}.reset10-progress{height:12px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid rgba(255,255,255,.08);margin:10px 0 18px}.reset10-progress div{height:100%;width:0%;background:linear-gradient(90deg, #53b8ff, #a97cff);transition:width .25s ease}.reset10-textarea{min-height:110px;font-size:17px}.reset10-victory{padding:16px;border-radius:20px;background:rgba(61,220,132,.10);border:1px solid rgba(61,220,132,.28);color:#caffdc;margin-top:12px}.reset10-float{position:fixed;right:14px;bottom:calc(98px + var(--safe-bottom));z-index:9000;width:62px;height:62px;border-radius:22px;border:1px solid rgba(255,107,107,.35);background:linear-gradient(135deg,#ff6b6b,#ff9b52);color:#fff;font-size:24px;font-weight:1000;box-shadow:0 18px 45px rgba(255,107,107,.26);cursor:pointer}
+    @media(max-width:420px){.reset10-action-grid,.reset10-stats{grid-template-columns:1fr}.reset10-panel{padding:18px}.reset10-float{width:58px;height:58px;bottom:calc(92px + var(--safe-bottom))}}
+
   </style>
 </head>
 <body>
@@ -143,6 +154,18 @@
           <div class="mini"><div class="label">Težina</div><strong id="weightValue">—</strong><div class="small">jutarnji unos</div></div>
           <div class="mini"><div class="label">Voda</div><strong id="waterValue">0.0 L</strong><div class="small">cilj 3.0 L</div></div>
           <div class="mini"><div class="label">Kalorije</div><strong id="calorieValue">—</strong><div class="small">cilj 2400 kcal</div></div>
+        </div>
+      </div>
+
+      <div class="card input-card reset10-card">
+        <div class="eyebrow" style="color:#ffcaca;">Reset 10</div>
+        <h3 class="reset10-title">Prekid lanca</h3>
+        <p class="reset10-lead">Kad krene poriv, lenjost ili stari automatizam — ne pregovaraš. Pokrećeš 10 minuta i prolaziš Delay → Distance → Do → Declare.</p>
+        <button class="danger-btn reset10-main-btn" onclick="openReset10()">🚨 PREKINI LANAC</button>
+        <div class="reset10-stats">
+          <div class="reset10-stat"><strong id="reset10Today">0</strong><span>danas</span></div>
+          <div class="reset10-stat"><strong id="reset10Week">0</strong><span>7 dana</span></div>
+          <div class="reset10-stat"><strong id="reset10Total">0</strong><span>ukupno</span></div>
         </div>
       </div>
 
@@ -284,6 +307,28 @@
     </section>
   </div>
 
+
+  <button class="reset10-float" onclick="openReset10()" aria-label="Prekini lanac">⛓️</button>
+
+  <div id="reset10Overlay" class="reset10-overlay" role="dialog" aria-modal="true" aria-label="Reset 10 Prekid lanca">
+    <div class="reset10-shell">
+      <div class="reset10-top">
+        <div class="reset10-badge">🚨 RESET 10 · PREKID LANCA</div>
+        <button class="reset10-close" onclick="closeReset10()">×</button>
+      </div>
+      <div class="reset10-panel">
+        <div id="reset10StepLabel" class="reset10-step-label">1 / 4 · Delay</div>
+        <h2 id="reset10Title">Odloži 10 minuta</h2>
+        <p id="reset10Copy" class="reset10-copy">Ne donosim odluku sada. Samo odlažem 10 minuta.</p>
+        <div id="reset10Timer" class="reset10-timer">10:00</div>
+        <div class="reset10-progress"><div id="reset10Progress"></div></div>
+        <div id="reset10Body" class="reset10-actions"></div>
+        <div id="reset10Nav" class="reset10-actions" style="margin-top:14px;"></div>
+      </div>
+    </div>
+  </div>
+
+
   <nav class="bottom-nav">
     <button type="button" class="tab active" data-tab="today" onclick="goTab('today')"><span>🏠</span><span>Danas</span></button>
     <button type="button" class="tab" data-tab="entry" onclick="goTab('entry')"><span>✍️</span><span>Unos</span></button>
@@ -424,7 +469,31 @@ function resetToday(){if(!confirm('Resetovati samo današnji unos?'))return;loca
 function eventLabel(type){const map={info:'ℹ️ Info',water:'💧 Voda',beer:'🍺 Pivo',soda:'🥤 Gazirano / sok',food:'🍽️ Hrana van plana',walk:'🚶 Šetnja',symptom:'🩺 Simptom'};return map[type]||'ℹ️ Info'}
 function initInstall(){window.addEventListener('beforeinstallprompt',(e)=>{e.preventDefault();deferredPrompt=e;const banner=document.getElementById('installBanner');if(banner)banner.classList.add('show')});[document.getElementById('installBtnTop'),document.getElementById('installBtnMore')].filter(Boolean).forEach(btn=>btn.addEventListener('click',async()=>{if(!deferredPrompt){alert('Install opcija se pojavljuje kad browser proceni da je app spremna. Na iPhone-u koristi Share → Add to Home Screen.');return}deferredPrompt.prompt();await deferredPrompt.userChoice;deferredPrompt=null}));const standalone=window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone;setText('pwaStatus',standalone?'App je otvoren kao instalirana aplikacija.':'App trenutno radi kao web/PWA stranica.')}
 function registerServiceWorkerStatus(){const chip=document.getElementById('serviceWorkerInfo');if(!chip)return;if('serviceWorker' in navigator){navigator.serviceWorker.getRegistration().then(reg=>{chip.textContent=reg?'service worker: aktivan':'service worker: nije registrovan'}).catch(()=>chip.textContent='service worker: greška')}else{chip.textContent='service worker: nepodržan'}}
-function renderAll(){renderTodayHeader();renderTodayStory();renderPriorityList();renderRecovery();renderDamageControl();renderWaterTracker();renderTaskChecklist();renderFieldEvents();renderLoserDays();renderHistory();renderRecords();loadQuote(false)}
+
+
+/* RESET 10 / PREKID LANCA */
+const RESET10_OPTIONS={
+  triggers:['Jak poriv','Lenjost / bežanje','Ekran / scroll','Hrana van plana','Pivo / alkohol','Nervoza / stres'],
+  distance:['Izašao sam iz sobe','Sklonio sam telefon / okidač','Oprao sam lice','Obuo sam patike','Popio sam vodu'],
+  actions:['5 minuta šetnje','20 čučnjeva','10 sklekova','Raspremi sto','Baci smeće','Izađi ispred kuće']
+};
+let reset10={step:1,trigger:'',action:'',distance:{},delaySeconds:600,doSeconds:300,delayTimer:null,doTimer:null,delayStarted:false,doStarted:false};
+function reset10Key(){return 'medscan-mobile-reset10-log'}
+function loadReset10Logs(){try{return JSON.parse(localStorage.getItem(reset10Key())||'[]')}catch(e){return []}}
+function saveReset10Logs(list){localStorage.setItem(reset10Key(),JSON.stringify(Array.isArray(list)?list:[]))}
+function openReset10(){reset10={step:1,trigger:'',action:'',distance:{},delaySeconds:600,doSeconds:300,delayTimer:null,doTimer:null,delayStarted:false,doStarted:false};const overlay=document.getElementById('reset10Overlay');if(overlay)overlay.classList.add('active');document.body.style.overflow='hidden';renderReset10()}
+function closeReset10(){clearInterval(reset10.delayTimer);clearInterval(reset10.doTimer);const overlay=document.getElementById('reset10Overlay');if(overlay)overlay.classList.remove('active');document.body.style.overflow='';renderReset10Stats()}
+function setReset10Step(step){reset10.step=step;renderReset10()}
+function startReset10Delay(){if(reset10.delayStarted)return;reset10.delayStarted=true;clearInterval(reset10.delayTimer);reset10.delayTimer=setInterval(()=>{reset10.delaySeconds=Math.max(0,reset10.delaySeconds-1);renderReset10Timer();if(reset10.delaySeconds<=0){clearInterval(reset10.delayTimer);showToast('Prvih 10 minuta je završeno. Nastavi korak 2.')}},1000);renderReset10()}
+function startReset10Do(){if(reset10.doStarted)return;reset10.doStarted=true;clearInterval(reset10.doTimer);reset10.doTimer=setInterval(()=>{reset10.doSeconds=Math.max(0,reset10.doSeconds-1);renderReset10Timer();if(reset10.doSeconds<=0){clearInterval(reset10.doTimer);showToast('Fizički prekid je završen. Upiši dokaz pobede.')}},1000);renderReset10()}
+function reset10Fmt(sec){const m=String(Math.floor(sec/60)).padStart(2,'0');const s=String(sec%60).padStart(2,'0');return `${m}:${s}`}
+function renderReset10Timer(){const timer=document.getElementById('reset10Timer');const bar=document.getElementById('reset10Progress');if(!timer||!bar)return;if(reset10.step===1){timer.textContent=reset10Fmt(reset10.delaySeconds);bar.style.width=(100-((reset10.delaySeconds/600)*100))+'%'}else if(reset10.step===3){timer.textContent=reset10Fmt(reset10.doSeconds);bar.style.width=(100-((reset10.doSeconds/300)*100))+'%'}else{timer.textContent=reset10.step===4?'POBEDA':'SADA';bar.style.width=reset10.step===2?'50%':'100%'}}
+function renderReset10(){const body=document.getElementById('reset10Body');const nav=document.getElementById('reset10Nav');if(!body||!nav)return;const label=document.getElementById('reset10StepLabel');const title=document.getElementById('reset10Title');const copy=document.getElementById('reset10Copy');if(label)label.textContent=`${reset10.step} / 4 · ${['','Delay','Distance','Do','Declare'][reset10.step]}`;if(reset10.step===1){if(title)title.textContent='Odloži 10 minuta';if(copy)copy.textContent='Ne donosim odluku sada. Samo odlažem 10 minuta. Izaberi šta se dešava i pokreni tajmer.';body.innerHTML='<div class="reset10-action-grid">'+RESET10_OPTIONS.triggers.map(t=>`<button class="reset10-option ${reset10.trigger===t?'selected':''}" onclick="reset10.trigger='${escapeJs(t)}';renderReset10()">${escapeHtml(t)}</button>`).join('')+'</div>';nav.innerHTML=`<button class="primary-btn" onclick="startReset10Delay()">${reset10.delayStarted?'Tajmer radi':'Pokreni 10 minuta'}</button><button class="secondary-btn" onclick="setReset10Step(2)">Dalje: Distance</button>`}else if(reset10.step===2){if(title)title.textContent='Pomeri se od okidača';if(copy)copy.textContent='Ustani odmah. Promeni prostor. Ne ostaješ pored izvora koji te vuče nazad.';body.innerHTML=RESET10_OPTIONS.distance.map((t,i)=>`<label class="reset10-check"><input type="checkbox" ${reset10.distance[t]?'checked':''} onchange="reset10.distance['${escapeJs(t)}']=this.checked"><span>${escapeHtml(t)}</span></label>`).join('');nav.innerHTML='<button class="ghost-btn" onclick="setReset10Step(1)">Nazad</button><button class="secondary-btn" onclick="setReset10Step(3)">Dalje: Do</button>'}else if(reset10.step===3){if(title)title.textContent='Uradi fizički prekid';if(copy)copy.textContent='Ne traži motivaciju. Izaberi jednu radnju i radi 5 minuta.';body.innerHTML='<div class="reset10-action-grid">'+RESET10_OPTIONS.actions.map(t=>`<button class="reset10-option ${reset10.action===t?'selected':''}" onclick="reset10.action='${escapeJs(t)}';renderReset10()">${escapeHtml(t)}</button>`).join('')+'</div>';nav.innerHTML=`<button class="ghost-btn" onclick="setReset10Step(2)">Nazad</button><button class="primary-btn" onclick="startReset10Do()">${reset10.doStarted?'5 min radi':'Pokreni 5 min'}</button><button class="secondary-btn" onclick="setReset10Step(4)">Dalje: Declare</button>`}else{if(title)title.textContent='Upiši dokaz pobede';if(copy)copy.textContent='Jedna rečenica. Mozak mora da vidi dokaz novog identiteta.';const now=new Date().toLocaleTimeString('sr-RS',{hour:'2-digit',minute:'2-digit'});body.innerHTML=`<textarea id="reset10Declare" class="reset10-textarea" placeholder="Danas sam pobedio talas u ${now}.">Danas sam pobedio talas u ${now}.</textarea><div class="reset10-victory">Lanac nije pukao. Pobedio si ovaj talas — ne ceo život odjednom, nego baš ovaj trenutak.</div>`;nav.innerHTML='<button class="ghost-btn" onclick="setReset10Step(3)">Nazad</button><button class="primary-btn" onclick="saveReset10Victory()">Zabeleži pobedu</button>'}renderReset10Timer()}
+function saveReset10Victory(){const textarea=document.getElementById('reset10Declare');const note=(textarea?.value||'Danas sam pobedio talas.').trim();const logs=loadReset10Logs();logs.unshift({id:cryptoRandom(),date:new Date().toISOString().slice(0,10),time:new Date().toLocaleTimeString('sr-RS',{hour:'2-digit',minute:'2-digit'}),trigger:reset10.trigger||'nije izabrano',action:reset10.action||'nije izabrano',distance:Object.keys(reset10.distance).filter(k=>reset10.distance[k]),note});saveReset10Logs(logs.slice(0,200));const state=loadState();if(!Array.isArray(state.fieldEvents))state.fieldEvents=[];state.fieldEvents.unshift({id:cryptoRandom(),type:'info',text:`RESET 10: ${note}`,time:new Date().toLocaleTimeString('sr-RS',{hour:'2-digit',minute:'2-digit'}),date:new Date().toISOString().slice(0,10)});saveState(state);showToast('RESET 10 pobeda zabeležena.');closeReset10();renderAll()}
+function renderReset10Stats(){const logs=loadReset10Logs();const today=new Date();const todayStr=today.toISOString().slice(0,10);const weekStart=new Date(today);weekStart.setDate(today.getDate()-6);const weekStartStr=weekStart.toISOString().slice(0,10);setText('reset10Today',String(logs.filter(x=>x.date===todayStr).length));setText('reset10Week',String(logs.filter(x=>x.date>=weekStartStr).length));setText('reset10Total',String(logs.length))}
+function escapeJs(str){return String(str ?? '').replaceAll('\\','\\\\').replaceAll("'","\\'").replaceAll('\n',' ')}
+
+function renderAll(){renderTodayHeader();renderTodayStory();renderPriorityList();renderRecovery();renderDamageControl();renderWaterTracker();renderTaskChecklist();renderFieldEvents();renderLoserDays();renderHistory();renderRecords();renderReset10Stats();loadQuote(false)}
 function setText(id,text){const el=document.getElementById(id);if(el)el.textContent=text}
 function setWidth(id,val){const el=document.getElementById(id);if(el)el.style.width=Math.max(0,Math.min(100,val))+'%'}
 function parseNum(v){if(v===''||v===null||v===undefined)return null;const n=Number(v);return Number.isFinite(n)?n:null}
