@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>MEDSCAN Mobile v6.1 · RESET 10</title>
+  <title>MEDSCAN Mobile v6.2 · Guided RESET</title>
   <meta name="theme-color" content="#0b1224" />
   <link rel="manifest" href="manifest.webmanifest">
   <style>
@@ -131,7 +131,7 @@
     .reset10-map-track{height:10px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden}.reset10-map-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#ff6b6b,#ffd24f)}
     .reset10-latest{display:grid;gap:10px;margin-top:12px}.reset10-log-item{padding:12px;border-radius:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07)}
     .reset10-proof{display:grid;gap:10px;margin-top:12px}.reset10-proof-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.reset10-proof-btn{min-height:56px;border-radius:18px;border:1px solid rgba(83,184,255,.25);background:rgba(83,184,255,.10);color:var(--text);font-weight:900;cursor:pointer}.reset10-proof-btn.selected{border-color:rgba(61,220,132,.5);background:rgba(61,220,132,.14);color:#caffdc}
-    .reset10-sos{margin-top:12px;padding:14px;border-radius:18px;border:1px solid rgba(255,210,79,.24);background:rgba(255,210,79,.08)}.reset10-sos-text{margin-top:8px;padding:12px;border-radius:14px;background:rgba(2,8,22,.45);border:1px solid rgba(255,255,255,.08);color:#fff7d4;line-height:1.4}
+    .reset10-sos{margin-top:12px;padding:14px;border-radius:18px;border:1px solid rgba(255,210,79,.24);background:rgba(255,210,79,.08)}.reset10-sos-text{margin-top:8px;padding:12px;border-radius:14px;background:rgba(2,8,22,.45);border:1px solid rgba(255,255,255,.08);color:#fff7d4;line-height:1.4}.reset10-guidance{margin-top:12px;padding:16px;border-radius:20px;border:1px solid rgba(83,184,255,.24);background:linear-gradient(135deg, rgba(83,184,255,.10), rgba(169,124,255,.08));box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}.reset10-guidance .phase{display:inline-flex;align-items:center;gap:8px;padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);color:#bfe5ff;font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}.reset10-guidance strong{display:block;margin-top:10px;font-size:18px;line-height:1.28;letter-spacing:-.025em}.reset10-guidance .small{margin-top:8px;color:#c9d8f4}
     .reset10-footer-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
     @media(min-width:860px){.app{max-width:1020px}.top-card{padding:18px 20px}.reset10-shell{max-width:900px}.reset10-panel{min-height:620px}.reset10-action-grid{grid-template-columns:repeat(3,1fr)}.reset10-stats{grid-template-columns:repeat(3,1fr)}.reset10-insights{grid-template-columns:repeat(4,1fr)}.reset10-proof-grid{grid-template-columns:repeat(4,1fr)}}
     @media(max-width:420px){.reset10-action-grid,.reset10-stats,.reset10-insights,.reset10-footer-actions{grid-template-columns:1fr}.reset10-map-row{grid-template-columns:1fr}.reset10-panel{padding:18px}.reset10-float{width:58px;height:58px;bottom:calc(92px + var(--safe-bottom))}}
@@ -141,7 +141,7 @@
 <body>
   <div class="app">
     <div class="top-card">
-      <div class="brand"><div class="logo">🩺</div><div><h1>MEDSCAN Mobile</h1><div class="subtitle">Postaješ čovek koji zatvara dan. Brz unos, jasan nastavak.</div><div class="version-badge">v6.1 · RESET 10 + Proof Log</div></div></div>
+      <div class="brand"><div class="logo">🩺</div><div><h1>MEDSCAN Mobile</h1><div class="subtitle">Postaješ čovek koji zatvara dan. Brz unos, jasan nastavak.</div><div class="version-badge">v6.2 · Guided RESET + Proof Log</div></div></div>
       <button class="ghost-btn" onclick="goTab('history')">Istorija</button>
     </div>
     <div id="installBanner" class="install-banner top-card" style="padding:14px 16px;">
@@ -318,7 +318,7 @@
     </section>
 
     <section id="tab-more" class="section">
-      <div class="card input-card"><div class="eyebrow" style="margin-bottom:6px;">Build</div><h3 class="section-title" style="font-size:22px;margin-bottom:4px;">Stabilna verzija</h3><div class="small">v6.1-reset10-rc1 · safe schema v6 · mobile polish · water branch</div></div>
+      <div class="card input-card"><div class="eyebrow" style="margin-bottom:6px;">Build</div><h3 class="section-title" style="font-size:22px;margin-bottom:4px;">Stabilna verzija</h3><div class="small">v6.2-guided-reset-rc1 · safe schema v6 · guided RESET messages · water branch</div></div>
       <div class="card input-card">
         <h3 class="section-title">Više</h3>
         <div class="field"><label>Kratka beleška</label><textarea id="note" placeholder="Kako je prošao dan, šta popravljaš sutra..."></textarea></div>
@@ -364,7 +364,7 @@
 <script>
 const TASKS=[{id:'warmLemonWater',icon:'🥤',title:'Jutarnja voda',note:'500 ml vode odmah nakon buđenja',due:7},{id:'waterTea',icon:'🍵',title:'Jutarnji čaj',note:'Bez šećera',due:10},{id:'smoothie',icon:'🥣',title:'Smoothie',note:'Zatvori između 11 i 12h',due:12},{id:'mainMeal',icon:'🍽️',title:'Glavni obrok',note:'Zatvori do 18:30',due:18},{id:'walk',icon:'🚶',title:'Šetnja / koraci',note:'Cilj 8–10k koraka',due:19},{id:'bars',icon:'🏋️',title:'Sprava',note:'10–15 minuta lagano',due:20},{id:'noBread',icon:'🥖',title:'Bez hleba',note:'Potvrda za ceo dan',due:21},{id:'noSugar',icon:'🍬',title:'Bez šećera / sokova',note:'Potvrda za ceo dan',due:21},{id:'noLateFood',icon:'🌙',title:'Bez kasnog jela',note:'Posle večere nema dodatnog unosa',due:22}];
 const QUOTES=['Mali koraci svaki dan. Velike promene zauvek.','Ne mora savršeno. Mora zatvoreno.','Danas ne juriš motivaciju — gradiš sistem.','Telo pamti disciplinu čak i kad vaga ćuti.','Jedan čist dan je cigla u novom životu.','Kad ti je teško, uradi minimum. Minimum čuva ritam.','Ne pobeđuje najjači dan, nego najdosledniji čovek.','Svaki zapis je dokaz da vodiš svoj proces.','Disciplina danas znači lakše telo sutra.','Zatvoren dan je pobeda čak i kad nije savršen.','Nije poenta brzina. Poenta je smer.','Ne odustaj zbog jednog lošeg dana.','Sistem je jači od motivacije.','Doslednost pravi transformaciju.','Kad zatvoriš dan — pobedio si.'];
-const APP_VERSION='v6.1-reset10-rc1';
+const APP_VERSION='v6.2-guided-reset-rc1';
 const STATE_SCHEMA_VERSION=6;
 let deferredPrompt=null;
 function todayKey(){return 'medscan-mobile-day-'+new Date().toISOString().slice(0,10)}
@@ -497,7 +497,7 @@ function initInstall(){window.addEventListener('beforeinstallprompt',(e)=>{e.pre
 function registerServiceWorkerStatus(){const chip=document.getElementById('serviceWorkerInfo');if(!chip)return;if('serviceWorker' in navigator){navigator.serviceWorker.getRegistration().then(reg=>{chip.textContent=reg?'service worker: aktivan':'service worker: nije registrovan'}).catch(()=>chip.textContent='service worker: greška')}else{chip.textContent='service worker: nepodržan'}}
 
 
-/* RESET 10 / PREKID LANCA v2 */
+/* RESET 10 / PREKID LANCA v6.2 GUIDED MESSAGES */
 const RESET10_OPTIONS={
   triggers:['Jak poriv','Lenjost / bežanje','Ekran / scroll','Hrana van plana','Pivo / alkohol','Nervoza / stres','Cigara','Kasno veče','Umor posle posla'],
   distance:['Izašao sam iz sobe','Sklonio sam telefon / okidač','Oprao sam lice','Obuo sam patike','Popio sam vodu','Stao sam uspravno 60 sekundi'],
@@ -515,13 +515,42 @@ function setReset10Step(step){reset10.step=step;renderReset10()}
 function startReset10Delay(){if(reset10.delayStarted)return;reset10.delayStarted=true;clearInterval(reset10.delayTimer);reset10.delayTimer=setInterval(()=>{reset10.delaySeconds=Math.max(0,reset10.delaySeconds-1);renderReset10Timer();if(reset10.delaySeconds<=0){clearInterval(reset10.delayTimer);showToast('Prvih 10 minuta je završeno. Nastavi korak 2.')}},1000);renderReset10()}
 function startReset10Do(){if(reset10.doStarted)return;reset10.doStarted=true;clearInterval(reset10.doTimer);reset10.doTimer=setInterval(()=>{reset10.doSeconds=Math.max(0,reset10.doSeconds-1);renderReset10Timer();if(reset10.doSeconds<=0){clearInterval(reset10.doTimer);showToast('Fizički prekid je završen. Upiši dokaz pobede.')}},1000);renderReset10()}
 function reset10Fmt(sec){const m=String(Math.floor(sec/60)).padStart(2,'0');const s=String(sec%60).padStart(2,'0');return `${m}:${s}`}
-function renderReset10Timer(){const timer=document.getElementById('reset10Timer');const bar=document.getElementById('reset10Progress');if(!timer||!bar)return;if(reset10.step===1){timer.textContent=reset10Fmt(reset10.delaySeconds);bar.style.width=(100-((reset10.delaySeconds/600)*100))+'%'}else if(reset10.step===3){timer.textContent=reset10Fmt(reset10.doSeconds);bar.style.width=(100-((reset10.doSeconds/300)*100))+'%'}else{timer.textContent=reset10.step===4?'POBEDA':'SADA';bar.style.width=reset10.step===2?'50%':'100%'}}
+const RESET10_GUIDED_MESSAGES=[
+  'Talas je krenuo. Ne moraš da ga pratiš.',
+  'Ne rešavaš ceo život. Samo kupuješ vreme.',
+  'Ostani u RESET ekranu. Telefon je sada alat, ne izlaz.',
+  'Telo prvo. Udah sporije. Ramena dole.',
+  'Poriv traži brzinu. Ti biraš odlaganje.',
+  'Polovina je prošla. Ovo već jeste prekid lanca.',
+  'Ne pregovaraj sa talasom. Samo ostani.',
+  'Promeni položaj tela. Ustani ako možeš.',
+  'Još 120 sekundi. Dokaz se već gradi.',
+  'Završi čisto. Upisuješ pobedu.',
+  'Talas je slabiji ili je prošao. Zabeleži dokaz.'
+];
+const RESET10_TRIGGER_GUIDANCE={
+  'Jak poriv':'Ovo je talas. Ne moraš da ga pratiš.',
+  'Lenjost / bežanje':'Ne čekaš motivaciju. Pokrećeš telo.',
+  'Ekran / scroll':'Ne izlazi iz RESET ekrana. Telefon je sada tajmer, ne feed.',
+  'Hrana van plana':'Ne otvaraj kuhinju odmah. Sačekaj talas.',
+  'Pivo / alkohol':'Ne odlučuješ sada o piću. Samo odlažeš prvo otvaranje.',
+  'Nervoza / stres':'Ne šalji poruku iz alarma. Prvo spuštamo sistem.',
+  'Cigara':'Ne pali sada. Samo odloži prvi dim 10 minuta.',
+  'Kasno veče':'Veče ne traži dopamin. Traži zatvaranje dana.',
+  'Umor posle posla':'Umor ne odlučuje. Prvo voda, vazduh i 10 minuta razmaka.'
+};
+function reset10GuidedIndex(){return Math.min(10,Math.max(0,Math.floor((600-reset10.delaySeconds)/60)))}
+function reset10GuidedPhase(){const elapsed=600-reset10.delaySeconds;if(elapsed<180)return 'STOP';if(elapsed<360)return 'BODY';if(elapsed<540)return 'CONTROL';return 'PROOF'}
+function reset10GuidedText(){const idx=reset10GuidedIndex();const base=RESET10_GUIDED_MESSAGES[idx]||RESET10_GUIDED_MESSAGES[0];const specific=RESET10_TRIGGER_GUIDANCE[reset10.trigger]||'';if(!specific)return base;if(idx===0)return specific+' '+base;return base}
+function renderReset10Guidance(){const phase=document.getElementById('reset10GuidedPhase');const msg=document.getElementById('reset10GuidedMessage');const hint=document.getElementById('reset10GuidedHint');if(phase)phase.textContent=reset10GuidedPhase();if(msg)msg.textContent=reset10GuidedText();if(hint){const idx=reset10GuidedIndex();hint.textContent=`Guided minute ${idx}/10 · ostani u protokolu dok vreme radi.`}}
+
+function renderReset10Timer(){const timer=document.getElementById('reset10Timer');const bar=document.getElementById('reset10Progress');if(!timer||!bar)return;if(reset10.step===1){timer.textContent=reset10Fmt(reset10.delaySeconds);bar.style.width=(100-((reset10.delaySeconds/600)*100))+'%';renderReset10Guidance()}else if(reset10.step===3){timer.textContent=reset10Fmt(reset10.doSeconds);bar.style.width=(100-((reset10.doSeconds/300)*100))+'%'}else{timer.textContent=reset10.step===4?'POBEDA':'SADA';bar.style.width=reset10.step===2?'50%':'100%'}}
 function reset10OptionButtons(list,key){return '<div class="reset10-action-grid">'+list.map(t=>`<button class="reset10-option ${reset10[key]===t?'selected':''}" onclick="reset10['${key}']='${escapeJs(t)}';renderReset10()">${escapeHtml(t)}</button>`).join('')+'</div>'}
 function renderReset10(){const body=document.getElementById('reset10Body');const nav=document.getElementById('reset10Nav');if(!body||!nav)return;const label=document.getElementById('reset10StepLabel');const title=document.getElementById('reset10Title');const copy=document.getElementById('reset10Copy');if(label)label.textContent=`${reset10.step} / 4 · ${['','Delay','Distance','Do','Declare'][reset10.step]}`;
   if(reset10.step===1){
     if(title)title.textContent='Odloži 10 minuta';
     if(copy)copy.textContent='Ne donosim odluku sada. Samo odlažem 10 minuta. Izaberi okidač, oceni jačinu i pokreni tajmer.';
-    body.innerHTML=reset10OptionButtons(RESET10_OPTIONS.triggers,'trigger')+`<div class="reset10-sos"><strong>Jačina talasa sada: <span id="reset10BeforeText">${reset10.intensityBefore}</span>/10</strong><input type="range" min="1" max="10" value="${reset10.intensityBefore}" oninput="reset10.intensityBefore=Number(this.value);setText('reset10BeforeText',this.value)"><div class="reset10-sos-text">Pravilo: ne odlučuješ dok tajmer radi. Samo preživljavaš talas bez pregovora.</div></div>`;
+    body.innerHTML=reset10OptionButtons(RESET10_OPTIONS.triggers,'trigger')+`<div class="reset10-guidance"><span id="reset10GuidedPhase" class="phase">STOP</span><strong id="reset10GuidedMessage">${escapeHtml(reset10GuidedText())}</strong><div id="reset10GuidedHint" class="small">Guided minute 0/10 · ostani u protokolu dok vreme radi.</div></div><div class="reset10-sos"><strong>Jačina talasa sada: <span id="reset10BeforeText">${reset10.intensityBefore}</span>/10</strong><input type="range" min="1" max="10" value="${reset10.intensityBefore}" oninput="reset10.intensityBefore=Number(this.value);setText('reset10BeforeText',this.value)"><div class="reset10-sos-text">Pravilo: ne odlučuješ dok tajmer radi. Samo preživljavaš talas bez pregovora.</div></div>`;
     nav.innerHTML=`<button class="primary-btn" onclick="startReset10Delay()">${reset10.delayStarted?'Tajmer radi':'Pokreni 10 minuta'}</button><button class="secondary-btn" onclick="setReset10Step(2)">Dalje: Distance</button>`;
   }else if(reset10.step===2){
     if(title)title.textContent='Pomeri se od okidača';
